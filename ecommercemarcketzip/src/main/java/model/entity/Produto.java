@@ -60,4 +60,15 @@ public class Produto {
         return "Produto\tidProduto: " + idProduto + "\nNome = " + nome + "\nDescrição = " + desc + "\nPreco = " + preco
                 + "\nCategoria =" + categoria;
     }
+
+       public static Produto criarProduto(int idProduto, String nome, String desc, double preco, String categoria) {
+        return new Produto(idProduto, nome, desc, preco, categoria);
+    }
+    
+    public void atualizarProduto(String nome, String desc, double preco, String categoria) {
+        this.nome = nome;
+        this.desc = desc;
+        this.preco = preco;
+        this.categoria = categoria;
+    }
 }
