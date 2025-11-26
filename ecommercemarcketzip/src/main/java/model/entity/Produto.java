@@ -1,5 +1,7 @@
 package model.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 public class Produto {
     private int idProduto;
     private String nome;
@@ -70,5 +72,18 @@ public class Produto {
         this.desc = desc;
         this.preco = preco;
         this.categoria = categoria;
+    }
+
+        public static List<Produto> listarProdutos(List<Produto> produtos) {
+        return new ArrayList<>(produtos);
+    }
+
+    public static Produto buscarProduto(List<Produto> produtos, int idProduto) {
+        for (Produto produto : produtos) {
+            if (produto.getIdProduto() == idProduto) {
+                return produto;
+            }
+        }
+        return null;
     }
 }
