@@ -13,7 +13,7 @@ public class ProdutoDAO {
         double preco = produto.getPreco();
         String categoria = produto.getCategoria();
 
-        var sql = "INSERT INTO produto(id_prod, nome, desc, preco, categoria) VALUES (?,?,?,?,?);";
+        var sql = "INSERT INTO produto(id_prod, nome_prod, descricao_prod, preco_prod, categoria_prod) VALUES (?,?,?,?,?);";
         try (var conn = DB.getConnection()){
             assert conn != null;
             try (var pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
@@ -39,7 +39,7 @@ public class ProdutoDAO {
         double preco = produto.getPreco();
         String categoria = produto.getCategoria();
 
-        var sql = "UPDATE produto SET nome = ?, desc = ?, preco = ?, categoria = ? WHERE id_prod = ?";
+        var sql = "UPDATE produto SET nome_prod = ?, descricao_prod = ?, preco_prod = ?, categoria_prod = ? WHERE id_prod = ?";
         try (var conn = DB.getConnection()){
             assert conn != null;
             try (var pstmt = conn.prepareStatement(sql)){
@@ -70,19 +70,19 @@ public class ProdutoDAO {
         }
     }
 
-   public static Produto mostrarProduto (int idProduto){
-        var sql = "SELECT * FROM produto WHERE id_prod = ?;";
+   public static Produto mostrarProduto (String nome_prod){
+        var sql = "SELECT id_prod, nome_prod, descricao_prod, preco_prod, categoria_prod FROM produto WHERE id_prod = ?;";
         try(var conn = DB.getConnection()) {
             assert conn != null;
             try(var pstmt = conn.prepareStatement(sql)){
-                pstmt.setInt(1, idProduto);
+                pstmt.setString(1, nome_prod);
                 ResultSet rs = pstmt.executeQuery();
                 if(rs.next()){
                     int idp = rs.getInt("id_prod");
-                    String nomep = rs.getString("nome");
-                    String desc = rs.getString("desc");
-                    double preco = rs.getDouble("preco");
-                    String categoria = rs.getString("categoria");
+                    String nomep = rs.getString("nome_prod");
+                    String desc = rs.getString("descricao_prod");
+                    double preco = rs.getDouble("preco_prod");
+                    String categoria = rs.getString("categoria_prod");
 
                     return new Produto(idp, nomep, desc, preco, categoria);
                 }
@@ -94,10 +94,10 @@ public class ProdutoDAO {
     }
 
 
-    public static List<Produto> listaProduto(){
+    public static List<Produto> listarProdutos(){
         List<Produto> produtos = new ArrayList<Produto>();
 
-        var sql = "SELECT id_prod, nome, desc, preco, categoria FROM produto;";
+        var sql = "SELECT id_prod, nome_prod, descricao_prod, preco_prod, categoria_prod FROM produto;";
 
         try (var conn = DB.getConnection()) {
             assert conn != null;
@@ -105,10 +105,10 @@ public class ProdutoDAO {
                 var rs = pstmt.executeQuery();
                 while (rs.next()) {
                     int id = rs.getInt("id_prod");
-                    String nomeProduto = rs.getString("nome");
-                    String desc = rs.getString("desc");
-                    double preco = rs.getDouble("preco");
-                    String categoria = rs.getString("categoria");
+                    String nomeProduto = rs.getString("nome_prod");
+                    String desc = rs.getString("descricao_prod");
+                    double preco = rs.getDouble("preco_prod");
+                    String categoria = rs.getString("categoria_prod");
 
                     produtos.add(new Produto(id, nomeProduto, desc, preco, categoria));
                 }
