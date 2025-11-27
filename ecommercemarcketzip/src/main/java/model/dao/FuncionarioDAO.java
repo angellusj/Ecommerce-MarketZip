@@ -103,7 +103,7 @@ public class FuncionarioDAO {
         }
     }
 
-    public static void listarFuncionarios() {
+    public static List<Funcionario> listarFuncionarios() {
 
         String sql = """
                     SELECT f.id_func, u.id_usu, u.nome_usu, u.cpf_usu, u.email_usu,
@@ -134,17 +134,9 @@ public class FuncionarioDAO {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao listar funcionarios: " + e.getMessage());
+            throw new RuntimeException("Erro ao listar funcionários: " + e.getMessage(), e);
         }
 
-        for (Funcionario fnc : funcionarios) {
-            System.out.println(
-                fnc.getIdUsuario() + " | " +
-                    fnc.getNome() + " | " +
-                            fnc.getCpf() + " | " +
-                            fnc.getEmail() + " | " +
-                            fnc.getCargo() + " | ");
-        }
+        return funcionarios;
     }
-
 }
