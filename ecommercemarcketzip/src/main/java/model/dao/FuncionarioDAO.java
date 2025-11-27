@@ -139,4 +139,40 @@ public class FuncionarioDAO {
 
         return funcionarios;
     }
+
+    public static boolean atualizarFuncionario(Funcionario funcionario) {
+
+        String sqlAtualizarFuncionario = """
+                    UPDATE funcionario
+                    SET cargo_func = ?
+                    WHERE id_usu = ?
+                """;
+
+        try (Connection conn = DB.getConnection()) {
+            conn.setAutoCommit(false);
+
+            boolean usuarioOk = UsuarioDAO.atualizarUsuario(funcionario);
+            if (!usuarioOk) {
+                conn.rollback();
+                return false;
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement(sqlAtualizarFuncionario)) {
+                ps.setString(1, funcionario.getCargo());
+                ps.setInt(2, funcionario.getIdUsuario());
+
+                if (ps.executeUpdate() == 0) {
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            conn.commit();
+            return true;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar funcionario: " + e.getMessage());
+
+        }
+    }
 }
