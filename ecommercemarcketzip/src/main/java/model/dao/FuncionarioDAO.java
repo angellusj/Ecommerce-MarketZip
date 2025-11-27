@@ -175,4 +175,40 @@ public class FuncionarioDAO {
 
         }
     }
+
+    public static boolean deletarFuncionario(int idFunc) {
+
+        String sqlBuscarUsuario = "SELECT id_usu FROM funcionario WHERE id_func = ?";
+        String sqlDeletarUsuario = "DELETE FROM usuario WHERE id_usu = ?";
+
+        try (Connection conn = DB.getConnection()) {
+
+            conn.setAutoCommit(false);
+
+            int idUsuario = -1;
+
+            try (PreparedStatement ps = conn.prepareStatement(sqlBuscarUsuario)) {
+                ps.setInt(1, idFunc);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    idUsuario = rs.getInt("id_usu");
+                } else {
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            try (PreparedStatement ps2 = conn.prepareStatement(sqlDeletarUsuario)) {
+                ps2.setInt(1, idUsuario);
+
+                boolean deletou = ps2.executeUpdate() > 0;
+
+                conn.commit();
+                return deletou;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao deletar funcionrio: " + e.getMessage());
+        }
+    }
 }
