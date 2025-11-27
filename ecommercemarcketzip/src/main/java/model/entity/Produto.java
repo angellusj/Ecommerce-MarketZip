@@ -2,6 +2,8 @@ package model.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
+
 public class Produto {
     private int idProduto;
     private String nome;
@@ -85,5 +87,17 @@ public class Produto {
             }
         }
         return null;
+    }
+    
+    public static boolean excluirProduto(List<Produto> produtos, int idProduto) {
+        Iterator<Produto> iterator = produtos.iterator();
+        while (iterator.hasNext()) {
+            Produto produto = iterator.next();
+            if (produto.getIdProduto() == idProduto) {
+                iterator.remove();
+                return true;
+            }
+        }
+        return false;
     }
 }
