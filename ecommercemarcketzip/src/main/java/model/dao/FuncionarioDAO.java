@@ -23,7 +23,7 @@ public class FuncionarioDAO {
             conn = DB.getConnection();
             conn.setAutoCommit(false);
 
-            int idUsuarioGerado = UsuarioDAO.inserirUsuario(funcionario);
+            int idUsuarioGerado = UsuarioDAO.inserirUsuario(funcionario, conn);
 
             if (idUsuarioGerado == -1) {
                 return -1;

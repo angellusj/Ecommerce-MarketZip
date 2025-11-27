@@ -7,7 +7,7 @@ import java.sql.*;
 
 public class UsuarioDAO {
 
-    public static int inserirUsuario(Usuario usuario) {
+    public static int inserirUsuario(Usuario usuario, Connection conn) {
 
         if (buscarIdPorCpf(usuario.getCpf()) != null) {
             return -1;
@@ -23,8 +23,7 @@ public class UsuarioDAO {
                     RETURNING id_usu
                 """;
 
-        try (Connection conn = DB.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, usuario.getNome());
             ps.setString(2, usuario.getCpf());
@@ -99,7 +98,7 @@ public class UsuarioDAO {
             ps.setString(5, usuario.getSenha());
             ps.setInt(6, usuario.getIdUsuario());
 
-            return (ps.executeUpdate() > 0 ? true:false);
+            return (ps.executeUpdate() > 0 ? true : false);
 
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao atualizar usaurio: " + e.getMessage());
