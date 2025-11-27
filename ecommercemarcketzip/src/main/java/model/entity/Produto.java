@@ -1,5 +1,9 @@
 package model.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
+
 public class Produto {
     private int idProduto;
     private String nome;
@@ -59,5 +63,41 @@ public class Produto {
     public String toString() {
         return "Produto\tidProduto: " + idProduto + "\nNome = " + nome + "\nDescrição = " + desc + "\nPreco = " + preco
                 + "\nCategoria =" + categoria;
+    }
+
+       public static Produto criarProduto(int idProduto, String nome, String desc, double preco, String categoria) {
+        return new Produto(idProduto, nome, desc, preco, categoria);
+    }
+    
+    public void atualizarProduto(String nome, String desc, double preco, String categoria) {
+        this.nome = nome;
+        this.desc = desc;
+        this.preco = preco;
+        this.categoria = categoria;
+    }
+
+        public static List<Produto> listarProdutos(List<Produto> produtos) {
+        return new ArrayList<>(produtos);
+    }
+
+    public static Produto buscarProduto(List<Produto> produtos, int idProduto) {
+        for (Produto produto : produtos) {
+            if (produto.getIdProduto() == idProduto) {
+                return produto;
+            }
+        }
+        return null;
+    }
+    
+    public static boolean excluirProduto(List<Produto> produtos, int idProduto) {
+        Iterator<Produto> iterator = produtos.iterator();
+        while (iterator.hasNext()) {
+            Produto produto = iterator.next();
+            if (produto.getIdProduto() == idProduto) {
+                iterator.remove();
+                return true;
+            }
+        }
+        return false;
     }
 }
