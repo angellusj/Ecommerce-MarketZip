@@ -4,6 +4,8 @@ import model.db.DB;
 import model.entity.Funcionario;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FuncionarioDAO {
 
@@ -100,4 +102,49 @@ public class FuncionarioDAO {
             throw new RuntimeException("Erro ao buscar funcionario: " + e.getMessage(), e);
         }
     }
+
+    public static void listarFuncionarios() {
+
+        String sql = """
+                    SELECT f.id_func, u.id_usu, u.nome_usu, u.cpf_usu, u.email_usu,
+                           u.telefone_usu, u.senha_usu, f.cargo_func
+                    FROM funcionario f
+                    JOIN usuario u ON u.id_usu = f.id_usu
+                    ORDER BY f.id_func
+                """;
+
+        List<Funcionario> funcionarios = new ArrayList<>();
+
+        try (Connection conn = DB.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+
+                Funcionario func = new Funcionario(
+                        rs.getInt("id_usu"),
+                        rs.getString("nome_usu"),
+                        rs.getString("cpf_usu"),
+                        rs.getString("email_usu"),
+                        rs.getString("telefone_usu"),
+                        rs.getString("senha_usu"),
+                        rs.getString("cargo_func"));
+
+                funcionarios.add(func);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar funcionarios: " + e.getMessage());
+        }
+
+        for (Funcionario fnc : funcionarios) {
+            System.out.println(
+                fnc.getIdUsuario() + " | " +
+                    fnc.getNome() + " | " +
+                            fnc.getCpf() + " | " +
+                            fnc.getEmail() + " | " +
+                            fnc.getCargo() + " | ");
+        }
+    }
+
 }
