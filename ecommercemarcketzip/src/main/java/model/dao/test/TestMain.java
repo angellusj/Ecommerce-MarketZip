@@ -2,10 +2,10 @@ package model.dao.test;
 
 public class TestMain {
     public static void main(String[] args) {
-        TestDaoComposite testes;
+        TesteDaoComposite testes;
 
-        //testes = new TestDaoComposite();
+        testes = new TesteDaoComposite(new TestFuncionarioDAO());
 
-        //testes.teste();
+        testes.teste();
     }
 }

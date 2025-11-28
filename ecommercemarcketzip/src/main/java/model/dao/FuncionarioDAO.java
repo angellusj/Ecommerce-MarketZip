@@ -1,6 +1,7 @@
 package model.dao;
 
 import model.db.DB;
+import model.entity.Cliente;
 import model.entity.Funcionario;
 
 import java.sql.*;
@@ -176,7 +177,22 @@ public class FuncionarioDAO {
         }
     }
 
-    public static boolean deletarFuncionarioPorCpf(String cpf) {
+    public static void excluirFuncionario(Funcionario funcionario){
+        var sql = "DELETE FROM usuario u USING funcionario f WHERE u.id_usu = f.id_usu AND u.cpf_usu = ?;";
+        try (var conn = DB.getConnection()) {
+            assert conn != null;
+            try (var pstmt = conn.prepareStatement(sql)){
+
+                pstmt.setString(1, funcionario.getCpf());
+                pstmt.executeUpdate();
+
+            }
+        } catch (SQLException e) {
+           System.out.println(e.getMessage());
+        }
+    }
+
+    /*public static boolean deletarFuncionarioPorCpf(String cpf) {
 
         String sqlBuscarUsuario = """
                     SELECT u.id_usu
@@ -216,6 +232,6 @@ public class FuncionarioDAO {
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao deletar funcionario: " + e.getMessage());
         }
-    }
+    }*/
 
 }
