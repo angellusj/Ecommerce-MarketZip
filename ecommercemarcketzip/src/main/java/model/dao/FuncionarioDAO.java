@@ -69,20 +69,20 @@ public class FuncionarioDAO {
         }
     }
 
-    public static Funcionario buscarPorId(int idFunc) {
+    public static Funcionario buscarPorCpf(String cpf) {
 
         String sql = """
                     SELECT f.id_func, u.id_usu, u.nome_usu, u.cpf_usu, u.email_usu,
                            u.telefone_usu, u.senha_usu, f.cargo_func
                     FROM funcionario f
                     JOIN usuario u ON u.id_usu = f.id_usu
-                    WHERE f.id_func = ?
+                    WHERE u.cpf_usu = ?
                 """;
 
         try (Connection conn = DB.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, idFunc);
+            ps.setString(1, cpf);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -99,7 +99,7 @@ public class FuncionarioDAO {
             return null;
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar funcionario: " + e.getMessage(), e);
+            throw new RuntimeException("Erro ao buscar funcionario: " + e.getMessage());
         }
     }
 
@@ -176,9 +176,15 @@ public class FuncionarioDAO {
         }
     }
 
-    public static boolean deletarFuncionario(int idFunc) {
+    public static boolean deletarFuncionarioPorCpf(String cpf) {
 
-        String sqlBuscarUsuario = "SELECT id_usu FROM funcionario WHERE id_func = ?";
+        String sqlBuscarUsuario = """
+                    SELECT u.id_usu
+                    FROM usuario u
+                    JOIN funcionario f ON f.id_usu = u.id_usu
+                    WHERE u.cpf_usu = ?
+                """;
+
         String sqlDeletarUsuario = "DELETE FROM usuario WHERE id_usu = ?";
 
         try (Connection conn = DB.getConnection()) {
@@ -188,7 +194,7 @@ public class FuncionarioDAO {
             int idUsuario = -1;
 
             try (PreparedStatement ps = conn.prepareStatement(sqlBuscarUsuario)) {
-                ps.setInt(1, idFunc);
+                ps.setString(1, cpf);
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
                     idUsuario = rs.getInt("id_usu");
@@ -208,7 +214,8 @@ public class FuncionarioDAO {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao deletar funcionrio: " + e.getMessage());
+            throw new RuntimeException("Erro ao deletar funcionario: " + e.getMessage());
         }
     }
+
 }
