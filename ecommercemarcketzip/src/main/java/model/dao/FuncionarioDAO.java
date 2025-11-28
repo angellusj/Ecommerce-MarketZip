@@ -1,13 +1,11 @@
 package model.dao;
 
 import model.db.DB;
-import model.entity.Cliente;
 import model.entity.Funcionario;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+ 
 public class FuncionarioDAO {
 
     public static int inserirFuncionario(Funcionario funcionario) {

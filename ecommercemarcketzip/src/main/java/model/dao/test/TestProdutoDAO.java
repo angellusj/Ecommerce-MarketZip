@@ -1,12 +1,12 @@
 package model.dao.test;
 
+import model.entity.Produto;
+
 import java.util.List;
 
 import model.dao.ProdutoDAO;
-import model.entity.Produto;
 
-public class TestProdutoDAO implements TestDaoComponent{
-    
+public class TestProdutoDAO implements TesteDaoComponent{
     @Override
     public boolean teste(){
         try{
@@ -19,6 +19,7 @@ public class TestProdutoDAO implements TestDaoComponent{
             //testando atualização de produto
             produto.setNome("pippos de churrasco");
             ProdutoDAO.atualizarProduto(produto);
+            System.out.println(produto);
             System.out.println("Produto atualizado com sucesso!");
 
             //testando mostragem de produto
@@ -28,6 +29,7 @@ public class TestProdutoDAO implements TestDaoComponent{
 
             //testando listagem de produtos
             List<Produto> produtos = ProdutoDAO.listarProdutos();
+            System.out.println(produtos);
 
             //testando exclusão de produtos
             ProdutoDAO.excluirProduto(produto);

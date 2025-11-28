@@ -19,7 +19,7 @@ public class Funcionario extends Usuario {
 
     @Override
     public String toString() {
-        return super.toString() + "cargo: " + cargo;
+        return super.toString() + "\ncargo: " + cargo;
     }
 
     

@@ -6,9 +6,11 @@ import java.util.List;
 public class TesteDaoComposite implements TesteDaoComponent{
      List<TesteDaoComponent> testes;
 
-    TesteDaoComposite(TesteDaoComponent... args){
-        testes = List.of(args);
+    public TesteDaoComposite(TesteDaoComponent... args){
+        //testes = List.of(args);
+        testes = new ArrayList<>(List.of(args));
     }
+
 
     @Override
     public boolean teste() {

@@ -17,11 +17,6 @@ public abstract class Usuario {
         this.senha = senha;
     }
 
-    public String toString() {
-        return "ID: " + idUsuario + "\nnome: " + nome + "\ncpf:" + cpf + "\nemail:" + email
-                + "\ntelefone:" + telefone; // nao faz sentido exibir a senha
-    }
-
     public int getIdUsuario() {
         return idUsuario;
     }
@@ -70,5 +65,9 @@ public abstract class Usuario {
         this.senha = senha;
     }
 
+    public String toString() {
+        return "ID: " + idUsuario + "\nnome: " + nome + "\ncpf:" + cpf + "\nemail:" + email
+                + "\ntelefone:" + telefone; // nao faz sentido exibir a senha
+    }
 }
     
