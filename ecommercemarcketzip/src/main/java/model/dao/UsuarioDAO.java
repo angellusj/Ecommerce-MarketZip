@@ -9,14 +9,6 @@ public class UsuarioDAO {
 
     public static int inserirUsuario(Usuario usuario, Connection conn) {
 
-        if (buscarIdPorCpf(usuario.getCpf()) != null) {
-            return -1;
-        }
-
-        if (buscarIdPorEmail(usuario.getEmail()) != null) {
-            return -2;
-        }
-
         String sql = """
                     INSERT INTO usuario (nome_usu, cpf_usu, email_usu, telefone_usu, senha_usu)
                     VALUES (?, ?, ?, ?, ?)

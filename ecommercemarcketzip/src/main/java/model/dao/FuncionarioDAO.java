@@ -24,14 +24,6 @@ public class FuncionarioDAO {
 
             int idUsuarioGerado = UsuarioDAO.inserirUsuario(funcionario, conn);
 
-            if (idUsuarioGerado == -1) {
-                return -1;
-            }
-
-            if (idUsuarioGerado == -2) {
-                return -2;
-            }
-
             funcionario.setIdUsuario(idUsuarioGerado);
 
             int idFuncGerado;

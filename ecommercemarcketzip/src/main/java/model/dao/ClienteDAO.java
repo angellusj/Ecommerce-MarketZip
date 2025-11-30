@@ -23,11 +23,6 @@ public class ClienteDAO {
 
             int idUsuarioGerado = UsuarioDAO.inserirUsuario(cliente, conn);
 
-            if (idUsuarioGerado == -1)
-                return -1;
-            if (idUsuarioGerado == -2)
-                return -2;
-
             cliente.setIdUsuario(idUsuarioGerado);
 
             try (PreparedStatement ps = conn.prepareStatement(sqlInserirCliente)) {
