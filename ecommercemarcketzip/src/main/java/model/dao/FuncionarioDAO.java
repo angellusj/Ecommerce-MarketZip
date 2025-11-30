@@ -5,7 +5,7 @@ import model.entity.Funcionario;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
- 
+
 public class FuncionarioDAO {
 
     public static int inserirFuncionario(Funcionario funcionario) {
@@ -175,61 +175,18 @@ public class FuncionarioDAO {
         }
     }
 
-    public static void excluirFuncionario(Funcionario funcionario){
+    public static void excluirFuncionario(Funcionario funcionario) {
         var sql = "DELETE FROM usuario u USING funcionario f WHERE u.id_usu = f.id_usu AND u.cpf_usu = ?;";
         try (var conn = DB.getConnection()) {
             assert conn != null;
-            try (var pstmt = conn.prepareStatement(sql)){
+            try (var pstmt = conn.prepareStatement(sql)) {
 
                 pstmt.setString(1, funcionario.getCpf());
                 pstmt.executeUpdate();
 
             }
         } catch (SQLException e) {
-           System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
-
-    /*public static boolean deletarFuncionarioPorCpf(String cpf) {
-
-        String sqlBuscarUsuario = """
-                    SELECT u.id_usu
-                    FROM usuario u
-                    JOIN funcionario f ON f.id_usu = u.id_usu
-                    WHERE u.cpf_usu = ?
-                """;
-
-        String sqlDeletarUsuario = "DELETE FROM usuario WHERE id_usu = ?";
-
-        try (Connection conn = DB.getConnection()) {
-
-            conn.setAutoCommit(false);
-
-            int idUsuario = -1;
-
-            try (PreparedStatement ps = conn.prepareStatement(sqlBuscarUsuario)) {
-                ps.setString(1, cpf);
-                ResultSet rs = ps.executeQuery();
-                if (rs.next()) {
-                    idUsuario = rs.getInt("id_usu");
-                } else {
-                    conn.rollback();
-                    return false;
-                }
-            }
-
-            try (PreparedStatement ps2 = conn.prepareStatement(sqlDeletarUsuario)) {
-                ps2.setInt(1, idUsuario);
-
-                boolean deletou = ps2.executeUpdate() > 0;
-
-                conn.commit();
-                return deletou;
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao deletar funcionario: " + e.getMessage());
-        }
-    }*/
-
 }
