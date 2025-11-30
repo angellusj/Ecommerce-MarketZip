@@ -9,6 +9,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemDePedidoDAO {
+    public static ItemDePedido criarItem(Pedido pedido, model.entity.Produto produto, int quantidade) {
+        String sql = "INSERT INTO item_pedido (id_prod, id_pedido, quantidade_item) VALUES (?, ?, ?)";
+
+        try (Connection conn = DB.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setInt(1, produto.getIdProduto());
+            ps.setInt(2, pedido.getIdPedido());
+            ps.setInt(3, quantidade);
+
+            int linhasAfetadas = ps.executeUpdate();
+
+            if (linhasAfetadas == 0) {
+                throw new RuntimeException("Falha ao criar item de pedido: nenhuma linha afetada.");
+            }
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    int idItem = rs.getInt(1);
+                    return new ItemDePedido(idItem, produto.getIdProduto(), pedido.getIdPedido(), quantidade);
+                } else {
+                    throw new RuntimeException("Falha ao obter ID gerado para o item de pedido.");
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao criar item de pedido: " + e.getMessage(), e);
+        }
+    }
 
     public static void mostrarItem() {
         String sql = "SELECT * FROM item_pedido";
