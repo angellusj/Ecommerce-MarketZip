@@ -30,6 +30,7 @@ public class ClienteDAO {
 
             cliente.setIdUsuario(idUsuarioGerado);
 
+            int idClienteGerado = -1;
             try (PreparedStatement ps = conn.prepareStatement(sqlInserirCliente)) {
                 ps.setInt(1, idUsuarioGerado);
                 ps.setString(2, cliente.getEndereco());
@@ -38,10 +39,12 @@ public class ClienteDAO {
                 if (!rs.next()) {
                     throw new RuntimeException("erro ao gerar id do cliente");
                 }
+                idClienteGerado = rs.getInt(1);
+                cliente.setIdCliente(idClienteGerado);
             }
 
             conn.commit();
-            return idUsuarioGerado;
+            return idClienteGerado;
 
         } catch (SQLException e) {
 

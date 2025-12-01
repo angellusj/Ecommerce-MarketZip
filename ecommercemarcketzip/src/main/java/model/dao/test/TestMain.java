@@ -6,7 +6,9 @@ public class TestMain {
 
         testes = new TesteDaoComposite(
                 new TestFuncionarioDAO(),
-                new TestProdutoDAO()
+                new TestProdutoDAO(),
+                new TestePedidoDAO(),
+                new TesteItemDePedidoDAO()
         );
 
         testes.teste();

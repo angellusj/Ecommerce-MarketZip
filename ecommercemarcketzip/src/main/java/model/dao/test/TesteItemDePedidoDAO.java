@@ -1,21 +1,30 @@
 package model.dao.test;
 
 import model.dao.ItemDePedidoDAO;
+import model.dao.PedidoDAO;
+import model.dao.ProdutoDAO;
 import model.entity.ItemDePedido;
 import model.entity.Pedido;
 import model.entity.Produto;
 
-import java.sql.Date;
 import java.util.List;
 
-public class TesteItemDePedidoDAO {
-    public static void main(String[] args) {
-        // Ajuste estes IDs para valores existentes no seu banco
-        int idPedidoExistente = 1; // id de um pedido existente
-        int idProdutoExistente = 1; // id de um produto existente
-
-        Pedido pedido = new Pedido(idPedidoExistente, new Date(System.currentTimeMillis()), false, 0.0);
-        Produto produto = new Produto(idProdutoExistente, "Produto Teste", "Desc", 10.0, "Categoria");
+public class TesteItemDePedidoDAO implements TesteDaoComponent{
+    @Override
+    public boolean teste() {
+        try{
+        // Get an existing active pedido or create one
+        List<Pedido> pedidos = PedidoDAO.listarTodosPedidosAtivos();
+        if (pedidos.isEmpty()) {
+            System.out.println("Nenhum pedido ativo encontrado. Pulando teste ItemDePedidoDAO.");
+            return false;
+        }
+        
+        Pedido pedido = pedidos.getFirst();
+        
+        // Create a test product
+        Produto produto = new Produto(0, "Produto Teste ItemDePedido", "Desc", 10.0, "Categoria");
+        ProdutoDAO.criarProduto(produto);
 
         System.out.println("=== TESTE ItemDePedidoDAO ===");
 
@@ -46,5 +55,11 @@ public class TesteItemDePedidoDAO {
         }
 
         System.out.println("=== FIM TESTE ===");
+        return true;
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            System.out.println("Falhou em ItemDePedidoDAO");
+        }
+        return false;
     }
 }

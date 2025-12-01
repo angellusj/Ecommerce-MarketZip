@@ -6,20 +6,15 @@ public class Pedido {
     private Date data;
     private Boolean finalizar;
     private double valorTotal;
+    private Cliente cliente;
     
-public Pedido(int idPedido, Date data, Boolean finalizar, double valorTotal) {
+public Pedido(int idPedido, Date data, Boolean finalizar, double valorTotal, Cliente cliente) {
         this.idPedido = idPedido;
         this.data = data;
         this.finalizar = finalizar;
         this.valorTotal = valorTotal;
+        this.cliente = cliente;
  }
-
-
-@Override
-public String toString() {
-    return "Pedido idPedido=" + idPedido + ", data=" + data + ", finalizar=" + finalizar + ", valorTotal=" + valorTotal;
-}
-
 
 public int getIdPedido() {
     return idPedido;
@@ -52,4 +47,17 @@ public double getValorTotal() {
 public void setValorTotal(double valorTotal) {
     this.valorTotal = valorTotal;
 } 
+
+public Cliente getCliente() {
+    return cliente;
+}
+
+public void setCliente(Cliente cliente) {
+    this.cliente = cliente;
+}
+
+@Override
+public String toString() {
+    return "Pedido idPedido=" + idPedido + ", data=" + data + ", finalizar=" + finalizar + ", valorTotal=" + valorTotal;
+}
 }

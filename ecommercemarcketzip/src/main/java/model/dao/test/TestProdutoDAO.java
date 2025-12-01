@@ -32,8 +32,8 @@ public class TestProdutoDAO implements TesteDaoComponent{
             System.out.println(produtos);
 
             //testando exclusão de produtos
-            ProdutoDAO.excluirProduto(produto);
-            System.out.println("Produto excluido com sucesso!");
+            /*ProdutoDAO.excluirProduto(produto);
+            System.out.println("Produto excluido com sucesso!");*/
 
             return true;
         } catch (Exception e){

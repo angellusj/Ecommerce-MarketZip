@@ -13,7 +13,7 @@ public class ProdutoDAO {
         double preco = produto.getPreco();
         String categoria = produto.getCategoria();
 
-        var sql = "INSERT INTO produto(id_prod, nome_prod, descricao_prod, preco_prod, categoria_prod) VALUES (?,?,?,?,?);";
+        var sql = "INSERT INTO produto(nome_prod, descricao_prod, preco_prod, categoria_prod) VALUES (?,?,?,?);";
         try (var conn = DB.getConnection()){
             assert conn != null;
             try (var pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
@@ -71,7 +71,7 @@ public class ProdutoDAO {
     }
 
    public static Produto mostrarProduto (String nome_prod){
-        var sql = "SELECT id_prod, nome_prod, descricao_prod, preco_prod, categoria_prod FROM produto WHERE id_prod = ?;";
+        var sql = "SELECT id_prod, nome_prod, descricao_prod, preco_prod, categoria_prod FROM produto WHERE nome_prod = ?;";
         try(var conn = DB.getConnection()) {
             assert conn != null;
             try(var pstmt = conn.prepareStatement(sql)){
@@ -93,6 +93,28 @@ public class ProdutoDAO {
         return null;
     }
 
+    public static Produto buscarPorId(int id) {
+    String sql = "SELECT id_prod, nome_prod, descricao_prod, preco_prod, categoria_prod FROM produto WHERE id_prod = ?";
+    try (Connection conn = DB.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return new Produto(
+                    rs.getInt("id_prod"),
+                    rs.getString("nome_prod"),
+                    rs.getString("descricao_prod"),
+                    rs.getDouble("preco_prod"),
+                    rs.getString("categoria_prod")
+            );
+        }
+    } catch (SQLException e) {
+        System.out.println(e.getMessage());
+    }
+    return null;
+}
 
     public static List<Produto> listarProdutos(){
         List<Produto> produtos = new ArrayList<Produto>();
