@@ -54,7 +54,7 @@ public class ClienteController {
         return ClienteDAO.buscarPorCpf(cpf);
     }
 
-    public boolean atualizarCliente(Cliente cliente) {
+    public static boolean atualizarCliente(Cliente cliente) {
         if (cliente == null) {
             System.out.println("objeto nulo");
             return false;
@@ -64,7 +64,7 @@ public class ClienteController {
         return ClienteDAO.atualizarCliente(cliente);
     }
 
-    public boolean deletarCliente(Cliente cliente) {
+    public static boolean deletarCliente(Cliente cliente) {
         if (cliente == null) {
             System.out.println("objeto nulo");
             return false;
