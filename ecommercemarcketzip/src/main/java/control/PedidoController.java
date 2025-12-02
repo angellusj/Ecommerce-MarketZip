@@ -8,24 +8,13 @@ import model.entity.Cliente;
 import model.entity.Pedido;
 
 public class PedidoController {
-    public static Pedido criarPedido(int idPedido, Date data, Boolean finalizar, double valorTotal, Cliente cliente) {
-        if (data == null) {
-            throw new IllegalArgumentException("Data do pedido não pode ser nula.\n");
-        }
-
-        if (finalizar == null) {
-            throw new IllegalArgumentException("Status de finalização do pedido não pode ser nulo.\n");
-        }
-
-        if (valorTotal < 0) {
-            throw new IllegalArgumentException("Valor total do pedido não pode ser negativo.\n");
-        }
+    public static Pedido criarPedido(Cliente cliente) {
 
         if (cliente == null) {
             throw new IllegalArgumentException("Cliente do pedido não pode ser nulo.\n");
         }
-
-        Pedido pedido = new Pedido(idPedido, data, finalizar, valorTotal, cliente);
+        Date date = new Date(0);
+        Pedido pedido = new Pedido(cliente.getIdCliente(), date, false, 0.0, cliente);
         PedidoDAO.criarPedido(pedido);
         return pedido;
     }

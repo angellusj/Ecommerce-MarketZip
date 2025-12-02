@@ -65,7 +65,7 @@ public class PedidoDAO {
         }
     }
 
-   public static String visualizarPedido(int idPedido) {
+    public static String visualizarPedido(int idPedido) {
         String sql = """
                     SELECT p.id_pedido, p.data_pedido, p.finalizar_pedido, p.id_cli, p.valor_total_pedido,
                            i.id_item, i.quantidade_item,
@@ -278,25 +278,33 @@ public class PedidoDAO {
     }
 
     public static Pedido buscarPorId(int idPedido) {
-        String sql = "SELECT id_pedido, data_pedido, finalizar_pedido, id_cli, valor_total_pedido FROM pedido WHERE id_pedido = ?";
-        try (var conn = DB.getConnection()) {
-            assert conn != null;
-            try (var pstmt = conn.prepareStatement(sql)) {
-                pstmt.setInt(1, idPedido);
-                ResultSet rs = pstmt.executeQuery();
-                if (rs.next()) {
-                    int id = rs.getInt("id_pedido");
-                    Date data = rs.getDate("data_pedido");
-                    boolean fin = rs.getBoolean("finalizar_pedido");
-                    double total = rs.getDouble("valor_total_pedido");
-                    Cliente cliente = ClienteDAO.buscarPorCpf(rs.getString("cpf_cli"));
+        String sql = "SELECT id_pedido, data_pedido, finalizar_pedido, valor_total_pedido, id_cli " +
+                "FROM pedido WHERE id_pedido = ?";
 
-                    return new Pedido(id, data, fin, total, cliente);
-                }
+        try (Connection conn = DB.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idPedido);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                int idCli = rs.getInt("id_cli");
+                Cliente cliente = ClienteDAO.buscarPorIdCliente(idCli);
+
+                return new Pedido(
+                        rs.getInt("id_pedido"),
+                        rs.getDate("data_pedido"),
+                        rs.getBoolean("finalizar_pedido"),
+                        rs.getDouble("valor_total_pedido"),
+                        cliente);
             }
+
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException("Erro ao buscar pedido por id: " + e.getMessage(), e);
         }
+
         return null;
     }
+
 }
