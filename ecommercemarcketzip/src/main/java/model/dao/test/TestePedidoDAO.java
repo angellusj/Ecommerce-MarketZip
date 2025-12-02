@@ -31,17 +31,13 @@ public class TestePedidoDAO implements TesteDaoComponent {
             System.out.println("Pedido atualizado com sucesso!");
 
             System.out.println("=== Mostrando pedidos ===");
-            PedidoDAO.mostrarPedido();
+            int id = pedido.getIdPedido();
+            PedidoDAO.visualizarPedido(id);
             System.out.println("Pedidos mostrados com sucesso!");
 
             System.out.println("\n=== Finalizando pedidos abertos e recalculando totais ===");
             PedidoDAO.finalizarPedido();
             System.out.println("Pedidos finalizados com sucesso!");
-
-            System.out.println("\n=== Detalhamento de pedidos ===");
-            String detalhamento = PedidoDAO.detalharPedido();
-            System.out.println(detalhamento);
-            System.out.println("Detalhamento realizado com sucesso!");
 
             Produto produto = new Produto(1, "Produto Teste", "Descricao", 20.0, "Categoria Teste");
             ProdutoDAO.criarProduto(produto);
