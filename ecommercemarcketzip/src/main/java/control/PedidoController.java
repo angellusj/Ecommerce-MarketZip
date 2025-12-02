@@ -84,13 +84,8 @@ public class PedidoController {
         }
     }
 
-    public static Pedido mostrarPedido() {
-        PedidoDAO.mostrarPedido();
-        return null;
-    }
-
-    public static String detalharPedido() {
-        return PedidoDAO.detalharPedido();
+    public static String visualizarPedido(int idPedido ) {
+        return PedidoDAO.visualizarPedido(idPedido);
     }
 
     public static boolean adicionarItemAoPedido(Pedido pedido, model.entity.Produto produto) {

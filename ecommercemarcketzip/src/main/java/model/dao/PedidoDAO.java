@@ -65,36 +65,7 @@ public class PedidoDAO {
         }
     }
 
-    public static void mostrarPedido() {
-        String sql = "SELECT id_pedido, data_pedido, finalizar_pedido, id_cli, valor_total_pedido FROM pedido ORDER BY id_pedido";
-        try (Connection conn = DB.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
-            System.out.println("=== PEDIDOS ===\n");
-            boolean vazio = true;
-            while (rs.next()) {
-                vazio = false;
-                int id = rs.getInt("id_pedido");
-                Date data = rs.getDate("data_pedido");
-                boolean fin = rs.getBoolean("finalizar_pedido");
-                int idCli = rs.getInt("id_cli");
-                double total = rs.getDouble("valor_total_pedido");
-                System.out.println("ID: " + id);
-                System.out.println("Data: " + data);
-                System.out.println("Finalizado: " + fin);
-                System.out.println("Cliente: " + idCli);
-                System.out.println("Total: " + total);
-                System.out.println("-------------------");
-            }
-            if (vazio) {
-                System.out.println("Nenhum pedido encontrado.");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao mostrar pedidos: " + e.getMessage(), e);
-        }
-    }
-
-    public static String detalharPedido() {
+   public static String visualizarPedido(int idPedido) {
         String sql = """
                     SELECT p.id_pedido, p.data_pedido, p.finalizar_pedido, p.id_cli, p.valor_total_pedido,
                            i.id_item, i.quantidade_item,
@@ -102,31 +73,34 @@ public class PedidoDAO {
                     FROM pedido p
                     LEFT JOIN item_pedido i ON i.id_pedido = p.id_pedido
                     LEFT JOIN produto pr ON pr.id_prod = i.id_prod
+                    WHERE p.id_pedido = ?
                     ORDER BY p.id_pedido, i.id_item
                 """;
         StringBuilder sb = new StringBuilder();
         try (Connection conn = DB.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
-            int currentPedido = -1;
-            while (rs.next()) {
-                int idPed = rs.getInt("id_pedido");
-                if (idPed != currentPedido) {
-                    currentPedido = idPed;
-                    sb.append("Pedido ").append(idPed)
-                            .append(" | Data: ").append(rs.getDate("data_pedido"))
-                            .append(" | Finalizado: ").append(rs.getBoolean("finalizar_pedido"))
-                            .append(" | Cliente: ").append(rs.getInt("id_cli"))
-                            .append(" | Total: ").append(rs.getDouble("valor_total_pedido")).append("\n");
-                }
-                Integer idItem = (Integer) rs.getObject("id_item");
-                if (idItem != null) {
-                    sb.append("  Item ").append(idItem)
-                            .append(": Produto ").append(rs.getInt("id_prod"))
-                            .append(" (\"").append(rs.getString("nome_prod")).append("\")")
-                            .append(", Preço: ").append(rs.getDouble("preco_prod"))
-                            .append(", Quantidade: ").append(rs.getInt("quantidade_item"))
-                            .append("\n");
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idPedido);
+            try (ResultSet rs = ps.executeQuery()) {
+                int currentPedido = -1;
+                while (rs.next()) {
+                    int idPed = rs.getInt("id_pedido");
+                    if (idPed != currentPedido) {
+                        currentPedido = idPed;
+                        sb.append("Pedido ").append(idPed)
+                                .append(" | Data: ").append(rs.getDate("data_pedido"))
+                                .append(" | Finalizado: ").append(rs.getBoolean("finalizar_pedido"))
+                                .append(" | Cliente: ").append(rs.getInt("id_cli"))
+                                .append(" | Total: ").append(rs.getDouble("valor_total_pedido")).append("\n");
+                    }
+                    Integer idItem = (Integer) rs.getObject("id_item");
+                    if (idItem != null) {
+                        sb.append("  Item ").append(idItem)
+                                .append(": Produto ").append(rs.getInt("id_prod"))
+                                .append(" (\"").append(rs.getString("nome_prod")).append("\")")
+                                .append(", Preço: ").append(rs.getDouble("preco_prod"))
+                                .append(", Quantidade: ").append(rs.getInt("quantidade_item"))
+                                .append("\n");
+                    }
                 }
             }
         } catch (SQLException e) {
