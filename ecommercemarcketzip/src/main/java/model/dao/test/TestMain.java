@@ -8,7 +8,8 @@ public class TestMain {
                 new TestFuncionarioDAO(),
                 new TestProdutoDAO(),
                 new TestePedidoDAO(),
-                new TesteItemDePedidoDAO()
+                new TesteItemDePedidoDAO(),
+                new TestClienteDAO()
         );
 
         testes.teste();

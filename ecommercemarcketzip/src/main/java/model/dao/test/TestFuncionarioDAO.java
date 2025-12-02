@@ -17,7 +17,7 @@ public class TestFuncionarioDAO implements TesteDaoComponent{
             List<Funcionario> lista = FuncionarioDAO.listarFuncionarios();
             Funcionario funcionario;
             if (lista.isEmpty()){
-                funcionario = new Funcionario(0, "jose", "123648", "naoseioq@gmail.com", "12345", "senhateste", "gerente");
+                funcionario = new Funcionario(0, "josé", "0000000011", "jose@email.com", "01010101000", "joseteste", "gerente");
                 System.out.println("Inserindo funcionario no banco:");
                 FuncionarioDAO.inserirFuncionario(funcionario);
                 funcionario = FuncionarioDAO.buscarPorCpf(funcionario.getCpf());
@@ -25,9 +25,6 @@ public class TestFuncionarioDAO implements TesteDaoComponent{
             } else {
                 funcionario = lista.getFirst();
             }
-
-            //System.out.println("Inserindo funcionario no banco:");
-            //FuncionarioDAO.inserirFuncionario(funcionario);
 
             System.out.println("Editando funcionario:");
             funcionario.setNome("João");
@@ -42,6 +39,12 @@ public class TestFuncionarioDAO implements TesteDaoComponent{
             System.out.println("Deletar funcionario:");
             FuncionarioDAO.excluirFuncionario(funcionario);;
             System.out.println("Funcionario deletado com sucesso!");
+
+            System.out.println("Listando todos os funcionarios:");
+            List<Funcionario> funcionarios = FuncionarioDAO.listarFuncionarios();
+            for (Funcionario f : funcionarios) {
+                System.out.println(f);
+            }
 
             return true;
         } catch (Exception e) {

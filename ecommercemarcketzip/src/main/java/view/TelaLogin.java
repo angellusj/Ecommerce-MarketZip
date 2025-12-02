@@ -12,7 +12,6 @@ public class TelaLogin {
     public static Funcionario login(Scanner scanner) {
         String nome, senha;
         Funcionario func = null;
-        //remover try
         try {
             Logg.info("==LOGIN==");
             boolean loginRealizado = false;

@@ -44,8 +44,8 @@ public class TesteItemDePedidoDAO implements TesteDaoComponent{
         System.out.println("Atualizado: " + novoItem);
 
         // Excluir item
-        ItemDePedidoDAO.excluirItem(novoItem);
-        System.out.println("Item excluído: id=" + novoItem.getIdItem());
+        //ItemDePedidoDAO.excluirItem(novoItem);
+        //System.out.println("Item excluído: id=" + novoItem.getIdItem());
 
         // Listar novamente
         List<ItemDePedido> itensDepois = ItemDePedidoDAO.listarItens(pedido);

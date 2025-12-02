@@ -4,10 +4,26 @@ import java.sql.Date;
 import java.util.List;
 
 import model.dao.PedidoDAO;
+import model.dao.ItemDePedidoDAO;
 import model.entity.Cliente;
 import model.entity.Pedido;
 
 public class PedidoController {
+    
+    /**
+     * Valida se um pedido possui pelo menos um produto
+     * @param pedido Pedido a validar
+     * @return true se o pedido possui produtos, false caso contrário
+     */
+    public static boolean validarProdutosNoPedido(Pedido pedido) {
+        if (pedido == null) {
+            return false;
+        }
+        
+        List<model.entity.ItemDePedido> itens = ItemDePedidoDAO.listarItens(pedido);
+        return itens != null && !itens.isEmpty();
+    }
+    
     public static Pedido criarPedido(int idPedido, Date data, Boolean finalizar, double valorTotal, Cliente cliente) {
         if (data == null) {
             throw new IllegalArgumentException("Data do pedido não pode ser nula.\n");
@@ -26,12 +42,18 @@ public class PedidoController {
         }
 
         Pedido pedido = new Pedido(idPedido, data, finalizar, valorTotal, cliente);
+        
+        // Validar se o pedido tem pelo menos um produto
+        if (!validarProdutosNoPedido(pedido)) {
+            throw new IllegalArgumentException("Pedido deve conter pelo menos um produto.\n");
+        }
+        
         PedidoDAO.criarPedido(pedido);
         return pedido;
     }
 
     public static boolean excluirPedido(int idPedido) {
-        Pedido pedido = PedidoDAO.buscarPorId(idPedido);
+        Pedido pedido = PedidoDAO.buscarPorIdSemValidacao(idPedido);
         if (pedido == null) {
             return false;
         }
@@ -72,6 +94,10 @@ public class PedidoController {
 
     public static Pedido buscarPedidoPorId(int idPedido) {
         return PedidoDAO.buscarPorId(idPedido);
+    }
+
+    public static Pedido buscarPedidoPorIdSemValidacao(int idPedido) {
+        return PedidoDAO.buscarPorIdSemValidacao(idPedido);
     }
 
     public static boolean finalizarPedido() {

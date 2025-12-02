@@ -4,6 +4,7 @@ import model.db.DB;
 import model.entity.Cliente;
 import model.entity.Pedido;
 import model.entity.Produto;
+import model.entity.ItemDePedido;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -289,9 +290,51 @@ public class PedidoDAO {
                     Date data = rs.getDate("data_pedido");
                     boolean fin = rs.getBoolean("finalizar_pedido");
                     double total = rs.getDouble("valor_total_pedido");
-                    Cliente cliente = ClienteDAO.buscarPorCpf(rs.getString("cpf_cli"));
+                    int idCliente = rs.getInt("id_cli");
+                    Cliente cliente = ClienteDAO.buscarPorId(idCliente);
 
-                    return new Pedido(id, data, fin, total, cliente);
+                    Pedido pedido = new Pedido(id, data, fin, total, cliente);
+                    
+                    // Carregar itens do pedido
+                    java.util.List<ItemDePedido> itens = ItemDePedidoDAO.listarItens(pedido);
+                    pedido.setItens(itens);
+                    
+                    // Validar se o pedido possui pelo menos um produto
+                    if (itens == null || itens.isEmpty()) {
+                        return null;
+                    }
+                    
+                    return pedido;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public static Pedido buscarPorIdSemValidacao(int idPedido) {
+        String sql = "SELECT id_pedido, data_pedido, finalizar_pedido, id_cli, valor_total_pedido FROM pedido WHERE id_pedido = ?";
+        try (var conn = DB.getConnection()) {
+            assert conn != null;
+            try (var pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, idPedido);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    int id = rs.getInt("id_pedido");
+                    Date data = rs.getDate("data_pedido");
+                    boolean fin = rs.getBoolean("finalizar_pedido");
+                    double total = rs.getDouble("valor_total_pedido");
+                    int idCliente = rs.getInt("id_cli");
+                    Cliente cliente = ClienteDAO.buscarPorId(idCliente);
+
+                    Pedido pedido = new Pedido(id, data, fin, total, cliente);
+                    
+                    // Carregar itens do pedido
+                    java.util.List<ItemDePedido> itens = ItemDePedidoDAO.listarItens(pedido);
+                    pedido.setItens(itens);
+                    
+                    return pedido;
                 }
             }
         } catch (SQLException e) {
