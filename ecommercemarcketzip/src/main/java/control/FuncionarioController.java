@@ -72,7 +72,7 @@ public class FuncionarioController {
             throw new IllegalArgumentException("Senha não pode ser nula ou vazia.");
         }
 
-        Funcionario funcionario = FuncionarioDAO.buscarPorCpf(login.toUpperCase());
+        Funcionario funcionario = FuncionarioDAO.buscarPorCpf(login);
         if (funcionario == null) {
             return null;
         }
