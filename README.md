@@ -20,7 +20,7 @@ mvn -v
 
 #### 1) Navegar até a raiz do projeto
 ```powershell
-cd "C:\Users\evers\Coisas da facul\POO 25.2\projeto terceira unidade\Ecommerce-MarketZip - Copia (2)\ecommercemarcketzip"
+cd "Ecommerce-MarketZip\ecommercemarcketzip"
 ```
 
 #### 2) Compilar e empacotar
