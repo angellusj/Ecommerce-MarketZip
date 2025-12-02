@@ -62,4 +62,23 @@ public class FuncionarioController {
     public List<Funcionario> listarFuncionarios() {
         return FuncionarioDAO.listarFuncionarios();
     }
+
+    public static Funcionario realizarLogin(String login, String senha) {
+        if (login == null || login.trim().isEmpty()) {
+            throw new IllegalArgumentException("Login não pode ser nulo ou vazio.");
+        }
+
+        if (senha == null || senha.trim().isEmpty()) {
+            throw new IllegalArgumentException("Senha não pode ser nula ou vazia.");
+        }
+
+        Funcionario funcionario = FuncionarioDAO.buscarPorCpf(login.toUpperCase());
+        if (funcionario == null) {
+            return null;
+        }
+        if (funcionario.getSenha().equals(senha)) {
+            return funcionario;
+        }
+        return null;
+    }
 }

@@ -4,6 +4,8 @@ import model.db.DB;
 import model.entity.Cliente;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClienteDAO {
 
@@ -180,6 +182,41 @@ public class ClienteDAO {
         } catch (SQLException e) {
             System.out.println("erro ao excluir cliente: " + e.getMessage());
         }
+    }
+
+    public static List<Cliente> listarClientes() {
+        String sql = """
+                    SELECT u.id_usu, u.nome_usu, u.cpf_usu, u.email_usu,
+                           u.telefone_usu, u.senha_usu, c.endereco_cli
+                    FROM cliente c
+                    JOIN usuario u ON u.id_usu = c.id_usu
+                """;
+
+        List<Cliente> clientes = new ArrayList<>();
+
+        try (var conn = DB.getConnection()){
+             assert conn != null;
+            try (var pstmt = conn.prepareStatement(sql)){
+                var rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                        int id = rs.getInt("id_usu");
+                        String nome = rs.getString("nome_usu");
+                        String cpf = rs.getString("cpf_usu");
+                        String email = rs.getString("email_usu");
+                        String telefone = rs.getString("telefone_usu");
+                        String senha = rs.getString("senha_usu");
+                        String endereco = rs.getString("endereco_cli");
+                    var c = new Cliente(id, nome, cpf, email, telefone, senha, endereco);
+                    c.setIdUsuario(id);
+                clientes.add(c);
+            }
+            return clientes;
+        }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
 }

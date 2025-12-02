@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ItemDePedidoController {
 
-    public ItemDePedido cadastrarItem(Pedido pedido, int idProduto, int quantidade) {
+    public ItemDePedido criarItem(Pedido pedido, int idProduto, int quantidade) {
         if (pedido == null) {
             System.out.println("erro ao inserir: pedido nulo");
             return null;

@@ -27,7 +27,7 @@ public class TestePedidoDAO implements TesteDaoComponent {
             PedidoDAO.criarPedido(pedido);
             System.out.println("Pedido criado com sucesso!");
 
-            PedidoDAO.atualizarPedido(pedido, 0, new Date(0));
+            PedidoDAO.atualizarPedido(pedido);
             System.out.println("Pedido atualizado com sucesso!");
 
             System.out.println("=== Mostrando pedidos ===");
@@ -55,7 +55,8 @@ public class TestePedidoDAO implements TesteDaoComponent {
             System.out.println("Item removido com sucesso!");
 
             System.out.println("\n=== Atualizando data do pedido ===");
-            PedidoDAO.atualizarPedido(pedido, 0, new Date(27122024));
+            pedido.setData(new Date(27122024));
+            PedidoDAO.atualizarPedido(pedido);
 
             System.out.println("\n=== Listar pedidos feitos (finalizados) ===");
             List<Pedido> feitos = PedidoDAO.listarPedidosFeitos();

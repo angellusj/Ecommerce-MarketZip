@@ -1,38 +1,49 @@
 package control;
 
+import java.util.List;
 import model.dao.ClienteDAO;
 import model.dao.UsuarioDAO;
 import model.entity.Cliente;
 
 public class ClienteController {
 
-    public boolean cadastrarCliente(Cliente cliente) {
+    public static Cliente cadastrarCliente(int idUsuario, String nome, String cpf, String email, String telefone, String senha, String endereco) {
 
-        if (cliente == null) {
-            System.out.println("erro ao inserir: objeto nulo");
-            return false;
-        } else if (UsuarioDAO.buscarIdPorCpf(cliente.getCpf()) != null) {
-            System.out.println("CPF ja existe");
-            return false;
-        } else if (UsuarioDAO.buscarIdPorEmail(cliente.getEmail()) != null) {
-            System.out.println("Email ja existe");
-            return false;
-        } else if (cliente.getCpf().isBlank()) {
-            System.out.println("erro ao inserir: cpf vazio");
-            return false;
-        } else if (cliente.getEmail().isBlank() || !(cliente.getEmail().contains("@"))) {
-            System.out.println("erro ao inserir: email vazio ou invalido");
-            return false;
-        } else if (cliente.getEndereco().isBlank()) {
-            System.out.println("erro ao inserir: endereco vazio");
-            return false;
+        if (idUsuario <= 0) {
+            throw new IllegalArgumentException("ID do usuário inválido.\n");
         }
-        
-        System.out.println("cadastrado!");
-        return ClienteDAO.inserirCliente(cliente) > 0;
+
+        if (nome == null) {
+            throw new IllegalArgumentException("Nome do cliente não pode ser nulo.\n");
+        }
+
+        if (cpf == null || cpf.isBlank()) {
+            throw new IllegalArgumentException("CPF do cliente não pode ser nulo ou vazio.\n");
+        }
+
+        if (email == null || email.isBlank() || !(email.contains("@"))) {
+            throw new IllegalArgumentException("Email do cliente não pode ser nulo, vazio ou inválido.\n");
+        }
+
+        if (telefone == null || telefone.isBlank()) {
+            throw new IllegalArgumentException("Telefone do cliente não pode ser nulo ou vazio.\n");
+        }
+
+        if (senha == null || senha.isBlank()) {
+            throw new IllegalArgumentException("Senha do cliente não pode ser nula ou vazia.\n");
+        }
+
+        if (endereco == null || endereco.isBlank()) {
+            throw new IllegalArgumentException("Endereço do cliente não pode ser nulo ou vazio.\n");
+        }
+
+        Cliente cliente = new Cliente(idUsuario, nome.toUpperCase(), cpf, email.toUpperCase(), telefone.toUpperCase(), senha.toUpperCase(),
+                endereco.toUpperCase());
+        ClienteDAO.inserirCliente(cliente);
+        return cliente;
     }
 
-    public Cliente buscarPorCpf(String cpf) {
+    public static Cliente buscarPorCpf(String cpf) {
         if (cpf == null || cpf.isBlank()) {
             System.out.println("CPF vazio");
             return null;
@@ -60,5 +71,9 @@ public class ClienteController {
         ClienteDAO.excluirCliente(cliente);
         System.out.println("deletado!");
         return true;
+    }
+
+    public static List<Cliente> listarClientes() {
+        return ClienteDAO.listarClientes();
     }
 }

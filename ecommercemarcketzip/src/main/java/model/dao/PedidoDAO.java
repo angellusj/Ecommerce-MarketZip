@@ -232,16 +232,15 @@ public class PedidoDAO {
         }
     }
 
-    public static void atualizarPedido(Pedido pedido, int idPedido, Date data) {
-        String sql = "UPDATE pedido SET data_pedido = ? WHERE id_pedido = ?";
+    public static void atualizarPedido(Pedido pedido) {
+        String sql = "UPDATE pedido SET data_pedido = ?, finalizar_pedido = ?, valor_total_pedido = ? WHERE id_pedido = ?";
         try (Connection conn = DB.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDate(1, data);
-            ps.setInt(2, idPedido);
+            ps.setDate(1, pedido.getData());
+            ps.setBoolean(2, pedido.getFinalizar());
+            ps.setDouble(3, pedido.getValorTotal());
+            ps.setInt(4, pedido.getIdPedido());
             ps.executeUpdate();
-            if (pedido.getIdPedido() == idPedido) {
-                pedido.setData(data);
-            }
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao atualizar pedido: " + e.getMessage(), e);
         }
@@ -281,7 +280,7 @@ public class PedidoDAO {
         }
     }
 
-    private static List<Pedido> listarPedidosPorConsulta(String sql, Object... params) {
+    public static List<Pedido> listarPedidosPorConsulta(String sql, Object... params) {
         List<Pedido> pedidos = new ArrayList<>();
         try (Connection conn = DB.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -304,4 +303,26 @@ public class PedidoDAO {
         return pedidos;
     }
 
+    public static Pedido buscarPorId(int idPedido) {
+        String sql = "SELECT id_pedido, data_pedido, finalizar_pedido, id_cli, valor_total_pedido FROM pedido WHERE id_pedido = ?";
+        try (var conn = DB.getConnection()) {
+            assert conn != null;
+            try (var pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, idPedido);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    int id = rs.getInt("id_pedido");
+                    Date data = rs.getDate("data_pedido");
+                    boolean fin = rs.getBoolean("finalizar_pedido");
+                    double total = rs.getDouble("valor_total_pedido");
+                    Cliente cliente = ClienteDAO.buscarPorCpf(rs.getString("cpf_cli"));
+
+                    return new Pedido(id, data, fin, total, cliente);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 }
