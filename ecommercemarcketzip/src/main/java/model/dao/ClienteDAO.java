@@ -2,6 +2,7 @@ package model.dao;
 
 import model.db.DB;
 import model.entity.Cliente;
+import model.entity.Usuario;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -67,10 +68,51 @@ public class ClienteDAO {
         }
     }
 
+    public static Cliente buscarPorIdCliente(int idCliente) {
+        String sql = "SELECT c.id_cli, c.id_usu, c.endereco_cli, " +
+                "u.nome_usu, u.cpf_usu, u.email_usu, u.telefone_usu, u.senha_usu " +
+                "FROM cliente c " +
+                "JOIN usuario u ON c.id_usu = u.id_usu " +
+                "WHERE c.id_cli = ?";
+
+        try (Connection conn = DB.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idCliente);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int idCli = rs.getInt("id_cli");
+                int idUsu = rs.getInt("id_usu");
+                String nome = rs.getString("nome_usu");
+                String cpf = rs.getString("cpf_usu");
+                String email = rs.getString("email_usu");
+                String telefone = rs.getString("telefone_usu");
+                String senha = rs.getString("senha_usu");
+                String endereco = rs.getString("endereco_cli");
+
+                return new Cliente(
+                        idCli,
+                        idUsu,
+                        nome,
+                        cpf,
+                        email,
+                        telefone,
+                        senha,
+                        endereco);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar cliente por id_cli: " + e.getMessage(), e);
+        }
+
+        return null;
+    }
+
     public static Cliente buscarPorCpf(String cpf) {
 
         String sql = """
-                    SELECT u.id_usu, u.nome_usu, u.cpf_usu, u.email_usu,
+                    SELECT c.id_cli, u.id_usu, u.nome_usu, u.cpf_usu, u.email_usu,
                            u.telefone_usu, u.senha_usu, c.endereco_cli
                     FROM cliente c
                     JOIN usuario u ON u.id_usu = c.id_usu
@@ -85,6 +127,7 @@ public class ClienteDAO {
 
             if (rs.next()) {
                 return new Cliente(
+                        rs.getInt("id_cli"),
                         rs.getInt("id_usu"),
                         rs.getString("nome_usu"),
                         rs.getString("cpf_usu"),
@@ -97,7 +140,7 @@ public class ClienteDAO {
             return null;
 
         } catch (SQLException e) {
-            throw new RuntimeException("eerro ao buscar cliente: " + e.getMessage(), e);
+            throw new RuntimeException("erro ao buscar cliente: " + e.getMessage(), e);
         }
     }
 
@@ -194,25 +237,25 @@ public class ClienteDAO {
 
         List<Cliente> clientes = new ArrayList<>();
 
-        try (var conn = DB.getConnection()){
-             assert conn != null;
-            try (var pstmt = conn.prepareStatement(sql)){
+        try (var conn = DB.getConnection()) {
+            assert conn != null;
+            try (var pstmt = conn.prepareStatement(sql)) {
                 var rs = pstmt.executeQuery();
 
-            while (rs.next()) {
-                        int id = rs.getInt("id_usu");
-                        String nome = rs.getString("nome_usu");
-                        String cpf = rs.getString("cpf_usu");
-                        String email = rs.getString("email_usu");
-                        String telefone = rs.getString("telefone_usu");
-                        String senha = rs.getString("senha_usu");
-                        String endereco = rs.getString("endereco_cli");
+                while (rs.next()) {
+                    int id = rs.getInt("id_usu");
+                    String nome = rs.getString("nome_usu");
+                    String cpf = rs.getString("cpf_usu");
+                    String email = rs.getString("email_usu");
+                    String telefone = rs.getString("telefone_usu");
+                    String senha = rs.getString("senha_usu");
+                    String endereco = rs.getString("endereco_cli");
                     var c = new Cliente(id, nome, cpf, email, telefone, senha, endereco);
                     c.setIdUsuario(id);
-                clientes.add(c);
+                    clientes.add(c);
+                }
+                return clientes;
             }
-            return clientes;
-        }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
