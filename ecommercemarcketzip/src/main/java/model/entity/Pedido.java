@@ -74,6 +74,7 @@ public void adicionarItem(ItemDePedido item) {
 
 @Override
 public String toString() {
+
     StringBuilder sb = new StringBuilder();
     sb.append("╔═══════════════════════════════════╗\n");
     sb.append("║ Pedido #").append(idPedido).append("\n");

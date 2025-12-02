@@ -2,18 +2,12 @@ package control;
 
 import java.util.List;
 import model.dao.ClienteDAO;
-import model.dao.FuncionarioDAO;
-import model.dao.UsuarioDAO;
 import model.entity.Cliente;
-import model.entity.Funcionario;
+
 
 public class ClienteController {
 
-    public static Cliente cadastrarCliente(int idUsuario, String nome, String cpf, String email, String telefone, String senha, String endereco) {
-
-        if (idUsuario <= 0) {
-            throw new IllegalArgumentException("ID do usuário inválido.\n");
-        }
+    public static boolean cadastrarCliente(int idUsuario, String nome, String cpf, String email, String telefone, String senha, String endereco) {
 
         if (nome == null) {
             throw new IllegalArgumentException("Nome do cliente não pode ser nulo.\n");
@@ -41,8 +35,8 @@ public class ClienteController {
 
         Cliente cliente = new Cliente(idUsuario, nome.toUpperCase(), cpf, email.toUpperCase(), telefone.toUpperCase(), senha.toUpperCase(),
                 endereco.toUpperCase());
-        ClienteDAO.inserirCliente(cliente);
-        return cliente;
+        
+        return ClienteDAO.inserirCliente(cliente) > 0;
     }
 
     public static Cliente buscarPorCpf(String cpf) {
@@ -54,7 +48,7 @@ public class ClienteController {
         return ClienteDAO.buscarPorCpf(cpf);
     }
 
-    public boolean atualizarCliente(Cliente cliente) {
+    public static boolean atualizarCliente(Cliente cliente) {
         if (cliente == null) {
             System.out.println("objeto nulo");
             return false;
@@ -64,7 +58,7 @@ public class ClienteController {
         return ClienteDAO.atualizarCliente(cliente);
     }
 
-    public boolean deletarCliente(Cliente cliente) {
+    public static boolean deletarCliente(Cliente cliente) {
         if (cliente == null) {
             System.out.println("objeto nulo");
             return false;
@@ -81,7 +75,7 @@ public class ClienteController {
 
     public static Cliente realizarLoginCliente(String login, String senha) {
         if (login == null || login.trim().isEmpty()) {
-            throw new IllegalArgumentException("Login não pode ser nulo ou vazio.");
+            throw new IllegalArgumentException("CPF não pode ser nulo ou vazio.");
         }
 
         if (senha == null || senha.trim().isEmpty()) {

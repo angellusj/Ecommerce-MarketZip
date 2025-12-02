@@ -41,13 +41,14 @@ public class PedidoController {
             throw new IllegalArgumentException("Cliente do pedido não pode ser nulo.\n");
         }
 
+        Date date = new Date(0);
         Pedido pedido = new Pedido(idPedido, data, finalizar, valorTotal, cliente);
         
         // Validar se o pedido tem pelo menos um produto
         if (!validarProdutosNoPedido(pedido)) {
             throw new IllegalArgumentException("Pedido deve conter pelo menos um produto.\n");
         }
-        
+
         PedidoDAO.criarPedido(pedido);
         return pedido;
     }

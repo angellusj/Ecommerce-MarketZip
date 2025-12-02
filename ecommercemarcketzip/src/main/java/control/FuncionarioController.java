@@ -8,7 +8,7 @@ import java.util.List;
 
 public class FuncionarioController {
 
-    public boolean cadastrarFuncionario(Funcionario funcionario) {
+    public static boolean cadastrarFuncionario(Funcionario funcionario) {
         if (funcionario == null) {
             System.out.println("erro ao inserir: objeto nulo");
             return false;
@@ -32,7 +32,7 @@ public class FuncionarioController {
         return FuncionarioDAO.inserirFuncionario(funcionario) > 0;
     }
 
-    public Funcionario buscarPorCpf(String cpf) {
+    public static Funcionario buscarPorCpf(String cpf) {
         if (cpf == null || cpf.isBlank()) {
             System.out.println("CPF vazio");
             return null;
@@ -48,7 +48,8 @@ public class FuncionarioController {
         return FuncionarioDAO.buscarPorNome(nome);
     }
 
-    public boolean atualizarFuncionario(Funcionario funcionario) {
+    public static boolean atualizarFuncionario(Funcionario funcionario) {
+
         if (funcionario == null) {
             System.out.println("objeto nulo");
             return false;
@@ -57,7 +58,7 @@ public class FuncionarioController {
         return FuncionarioDAO.atualizarFuncionario(funcionario);
     }
 
-    public boolean deletarFuncionario(Funcionario funcionario) {
+    public static boolean deletarFuncionario(Funcionario funcionario) {
         if (funcionario == null) {
             System.out.println("objeto nulo");
             return false;
@@ -67,7 +68,7 @@ public class FuncionarioController {
         return true;
     }
 
-    public List<Funcionario> listarFuncionarios() {
+    public static List<Funcionario> listarFuncionarios() {
         return FuncionarioDAO.listarFuncionarios();
     }
 

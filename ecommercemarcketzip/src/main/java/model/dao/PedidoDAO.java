@@ -66,7 +66,7 @@ public class PedidoDAO {
         }
     }
 
-   public static String visualizarPedido(int idPedido) {
+    public static String visualizarPedido(int idPedido) {
         String sql = """
                     SELECT p.id_pedido, p.data_pedido, p.finalizar_pedido, p.id_cli, p.valor_total_pedido,
                            i.id_item, i.quantidade_item,
@@ -279,6 +279,7 @@ public class PedidoDAO {
     }
 
     public static Pedido buscarPorId(int idPedido) {
+
         String sql = "SELECT id_pedido, data_pedido, finalizar_pedido, id_cli, valor_total_pedido FROM pedido WHERE id_pedido = ?";
         try (var conn = DB.getConnection()) {
             assert conn != null;
@@ -336,10 +337,14 @@ public class PedidoDAO {
                     
                     return pedido;
                 }
+
             }
+
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException("Erro ao buscar pedido por id: " + e.getMessage(), e);
         }
+
         return null;
     }
+
 }
