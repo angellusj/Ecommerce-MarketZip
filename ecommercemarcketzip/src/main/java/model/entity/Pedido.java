@@ -58,6 +58,6 @@ public void setCliente(Cliente cliente) {
 
 @Override
 public String toString() {
-    return "Pedido idPedido=" + idPedido + ", data=" + data + ", finalizar=" + finalizar + ", valorTotal=" + valorTotal;
+    return "Pedido de id " + idPedido + "\n data: " + data + "\n Atendido: " + (finalizar ? "sim":"nao") + "\n valorTotal:" + valorTotal + "\n- - - - - - - - - - - -";
 }
 }
