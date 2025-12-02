@@ -114,3 +114,12 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.item_pedido
     OWNER TO postgres;
+
+INSERT INTO usuario (nome_usu, cpf_usu, email_usu, telefone_usu, senha_usu) 
+VALUES ('admin', '00000000001', 'admin@ecommerce.com', '11999999999', 'admin123')
+ON CONFLICT (cpf_usu) DO NOTHING;
+
+INSERT INTO funcionario (id_usu, cargo_func) 
+SELECT id_usu, 'Administrador' FROM usuario 
+WHERE nome_usu = 'admin' 
+AND id_usu NOT IN (SELECT id_usu FROM funcionario WHERE id_usu IS NOT NULL);
