@@ -2,8 +2,10 @@ package control;
 
 import java.util.List;
 import model.dao.ClienteDAO;
+import model.dao.FuncionarioDAO;
 import model.dao.UsuarioDAO;
 import model.entity.Cliente;
+import model.entity.Funcionario;
 
 public class ClienteController {
 
@@ -75,5 +77,24 @@ public class ClienteController {
 
     public static List<Cliente> listarClientes() {
         return ClienteDAO.listarClientes();
+    }
+
+    public static Cliente realizarLoginCliente(String login, String senha) {
+        if (login == null || login.trim().isEmpty()) {
+            throw new IllegalArgumentException("Login não pode ser nulo ou vazio.");
+        }
+
+        if (senha == null || senha.trim().isEmpty()) {
+            throw new IllegalArgumentException("Senha não pode ser nula ou vazia.");
+        }
+
+        Cliente cliente = ClienteDAO.buscarPorCpf(login.toUpperCase());
+        if (cliente == null) {
+            return null;
+        }
+        if (cliente.getSenha().equals(senha)) {
+            return cliente;
+        }
+        return null;
     }
 }
