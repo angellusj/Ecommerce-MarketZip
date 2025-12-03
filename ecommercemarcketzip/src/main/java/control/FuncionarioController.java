@@ -10,7 +10,7 @@ public class FuncionarioController {
 
     public static boolean cadastrarFuncionario(Funcionario funcionario) {
         if (funcionario == null) {
-            System.out.println("erro ao inserir: objeto nulo");
+            System.out.println("Erro ao inserir: objeto nulo");
             return false;
         } else if (UsuarioDAO.buscarIdPorCpf(funcionario.getCpf()) != null) {
             System.out.println("CPF ja existe");
@@ -19,16 +19,16 @@ public class FuncionarioController {
             System.out.println("Email ja existe");
             return false;
         } else if (funcionario.getCpf().isBlank()) {
-            System.out.println("erro ao inserir: cpf vazio");
+            System.out.println("Erro ao inserir: cpf vazio");
             return false;
         } else if (funcionario.getEmail().isBlank() || !(funcionario.getEmail().contains("@"))) {
-            System.out.println("erro ao inserir: email vazio ou invalido");
+            System.out.println("Erro ao inserir: email vazio ou invalido");
             return false;
         } else if (funcionario.getCargo().isBlank()) {
-            System.out.println("erro ao inserir: cargo vazio");
+            System.out.println("Erro ao inserir: cargo vazio");
             return false;
         }
-        System.out.println("cadastrado!");
+        System.out.println("Cadastrado!");
         return FuncionarioDAO.inserirFuncionario(funcionario) > 0;
     }
 
@@ -50,16 +50,16 @@ public class FuncionarioController {
 
     public static boolean atualizarFuncionario(Funcionario funcionario) {
         if (funcionario == null) {
-            System.out.println("objeto nulo");
+            System.out.println("Objeto nulo");
             return false;
         }
-        System.out.println("atualizado!");
+        System.out.println("Atualizado!");
         return FuncionarioDAO.atualizarFuncionario(funcionario);
     }
 
     public static boolean deletarFuncionario(Funcionario funcionario) {
         if (funcionario == null) {
-            System.out.println("objeto nulo");
+            System.out.println("Objeto nulo");
             return false;
         }
         FuncionarioDAO.excluirFuncionario(funcionario);
@@ -80,13 +80,17 @@ public class FuncionarioController {
             throw new IllegalArgumentException("Senha não pode ser nula ou vazia.");
         }
 
-        Funcionario funcionario = FuncionarioDAO.buscarPorNome(login);
+        Funcionario funcionario = FuncionarioDAO.buscarPorCpf(login);
+
         if (funcionario == null) {
             return null;
         }
+
         if (funcionario.getSenha().equals(senha)) {
             return funcionario;
         }
+
         return null;
     }
+
 }
