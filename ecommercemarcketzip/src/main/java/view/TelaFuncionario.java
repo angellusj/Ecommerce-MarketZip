@@ -105,90 +105,79 @@ public class TelaFuncionario {
 
                 switch (opcao) {
                     case 1:
-                        if (scanner.hasNextLine())
-                            scanner.nextLine();
-                        Logg.info("Informe o CPF do cliente para consultar seus pedidos");
-                        System.out.print("CPF: ");
-                        String cpfConsulta = scanner.nextLine();
-                        Cliente clienteConsulta = ClienteController.buscarPorCpf(cpfConsulta);
-                        if (clienteConsulta == null) {
-                            Logg.warning("Cliente não encontrado.");
-                            break;
-                        }
+                        consultarPedido(scanner);
                         break;
                     case 2:
                         if (scanner.hasNextLine())
                             scanner.nextLine();
-                        List<Cliente> c = ClienteController.listarClientes();
-                        if (c.isEmpty()) {
-                            Logg.warning("Nenhum cliente cadastrado.");
+                        Logg.info("=== Excluir Pedido ===");
+                        
+                        // Listar pedidos ativos
+                        List<model.entity.Pedido> pedidosAtivos = control.PedidoController.listarPedidos();
+                        if (pedidosAtivos == null || pedidosAtivos.isEmpty()) {
+                            Logg.warning("Nenhum pedido ativo encontrado.");
                             break;
                         }
-                        Logg.info("TODOS OS CLIENTES");
-                        c.forEach(System.out::println);
-
-                        Logg.info("Informe o CPF do cliente");
-                        System.out.print("CPF: ");
-                        String cpf = scanner.nextLine();
-                        Cliente cli = ClienteController.buscarPorCpf(cpf);
-
-                        if (cli != null) {
-                            Logg.info("Cliente encontrado!");
-                            System.out.println(cli);
-                           // editarCliente(cli.getIdCliente(), cli, scanner);
+                        
+                        Logg.info("Pedidos ativos:");
+                        pedidosAtivos.forEach(System.out::println);
+                        
+                        System.out.print("ID do Pedido para excluir: ");
+                        int idPedidoExcluir = scanner.nextInt();
+                        scanner.nextLine();
+                        
+                        model.entity.Pedido pedidoExcluir = control.PedidoController.buscarPedidoPorIdSemValidacao(idPedidoExcluir);
+                        if (pedidoExcluir != null) {
+                            Logg.info("Pedido encontrado:");
+                            System.out.println(pedidoExcluir);
+                            Logg.warning("Deseja realmente excluir este pedido? (S/n)");
+                            System.out.print("Resposta: ");
+                            String respostaExcluir = scanner.nextLine().toUpperCase();
+                            if (respostaExcluir.equals("S")) {
+                                boolean excluido = control.PedidoController.excluirPedido(idPedidoExcluir);
+                                if (excluido) {
+                                    Logg.info("Pedido excluído com sucesso!");
+                                } else {
+                                    Logg.warning("Erro ao excluir pedido.");
+                                }
+                            } else {
+                                Logg.info("Operação cancelada.");
+                            }
                         } else {
-                            Logg.warning("Cliente não encontrado.");
+                            Logg.warning("Pedido não encontrado.");
                         }
                         break;
                     case 3:
                         if (scanner.hasNextLine())
                             scanner.nextLine();
-                        List<Cliente> cl = ClienteController.listarClientes();
-                        Logg.info("TODOS OS CLIENTES");
-                        cl.forEach(System.out::println);
-
-                        Logg.info("Informe o CPF do cliente");
-                        System.out.print("CPF: ");
-                        String cp = scanner.nextLine();
-                        Cliente clie = ClienteController.buscarPorCpf(cp);
-                        Logg.info("Cliente encontrado!");
-                        System.out.println(clie);
-
-                        if (clie != null) {
-                            Logg.warning("Deseja realmente excluir o cliente? (S/n)");
+                        Logg.info("=== Finalizar Pedido ===");
+                        System.out.print("ID do Pedido: ");
+                        int idPedidoFinalizar = scanner.nextInt();
+                        scanner.nextLine();
+                        
+                        model.entity.Pedido pedidoFinalizar = control.PedidoController.buscarPedidoPorIdSemValidacao(idPedidoFinalizar);
+                        if (pedidoFinalizar != null) {
+                            Logg.info("Pedido encontrado:");
+                            System.out.println(pedidoFinalizar);
+                            Logg.warning("Deseja realmente finalizar este pedido? (S/n)");
                             System.out.print("Resposta: ");
-                            String resposta = scanner.nextLine().toUpperCase();
-                            if (!resposta.equals("S")) {
+                            String respostaFinalizar = scanner.nextLine().toUpperCase();
+                            if (respostaFinalizar.equals("S")) {
+                                boolean finalizado = control.PedidoController.finalizarPedido();
+                                if (finalizado) {
+                                    Logg.info("Pedido finalizado com sucesso!");
+                                } else {
+                                    Logg.warning("Erro ao finalizar pedido.");
+                                }
+                            } else {
                                 Logg.info("Operação cancelada.");
-                                break;
                             }
-                            ClienteController clienteCtrl = new ClienteController();
-                            clienteCtrl.deletarCliente(clie);
-                            Logg.info("Cliente excluído com sucesso!");
                         } else {
-                            Logg.warning("Cliente não encontrado.");
+                            Logg.warning("Pedido não encontrado.");
                         }
                         break;
                     case 4:
-                        if (scanner.hasNextLine())
-                            scanner.nextLine();
-                        List<Cliente> clien = ClienteController.listarClientes();
-                        Logg.info("TODOS OS CLIENTES");
-                        clien.forEach(System.out::println);
-
-                        Logg.info("Informe o CPF do cliente");
-                        System.out.print("CPF: ");
-                        String cpfBuscado = scanner.nextLine();
-                        Cliente clienteBusca = ClienteController.buscarPorCpf(cpfBuscado);
-                        if (clienteBusca == null) {
-                            Logg.warning("Cliente não encontrado.");
-                            break;
-                        }
-                        Logg.info("Cliente encontrado!");
-                        System.out.println(clienteBusca);
-                        break;
-                    case 5:
-                        Logg.info("Saindo...");
+                        Logg.info("Voltando ao menu anterior...");
                         break;
                     default:
                         Logg.warning("Opção inválida, tente novamente.");
@@ -205,6 +194,75 @@ public class TelaFuncionario {
                 Logg.severe("Erro inesperado: " + e.getMessage());
             }
         } while (opcao != 4);
+    }
+
+    private static void consultarPedido(Scanner scanner) {
+        int opcao = 0;
+
+        do {
+            Logg.info("=== Consultar Pedidos ===");
+            System.out.println("1. Pedidos ativos do cliente");
+            System.out.println("2. Buscar pedido por ID");
+            System.out.println("3. Voltar");
+            System.out.print("Escolha uma opção: ");
+
+            try {
+                opcao = scanner.nextInt();
+
+                switch (opcao) {
+                    case 1:
+                        if (scanner.hasNextLine())
+                            scanner.nextLine();
+                        Logg.info("Informe o CPF do cliente para consultar seus pedidos");
+                        System.out.print("CPF: ");
+                        String cpfConsulta = scanner.nextLine();
+                        Cliente clienteConsulta = ClienteController.buscarPorCpf(cpfConsulta);
+                        if (clienteConsulta == null) {
+                            Logg.warning("Cliente não encontrado.");
+                            break;
+                        }
+                        List<model.entity.Pedido> pedidos = control.PedidoController.listarPedidosAtivosDoCliente(clienteConsulta);
+                        if (pedidos.isEmpty()) {
+                            Logg.warning("Nenhum pedido ativo encontrado para este cliente.");
+                        } else {
+                            Logg.info("Pedidos ativos do cliente " + clienteConsulta.getNome() + ":");
+                            pedidos.forEach(System.out::println);
+                        }
+                        break;
+                    case 2:
+                        if (scanner.hasNextLine())
+                            scanner.nextLine();
+                        Logg.info("=== Buscar Pedido por ID ===");
+                        System.out.print("ID do Pedido: ");
+                        int idPedido = scanner.nextInt();
+                        scanner.nextLine();
+                        
+                        model.entity.Pedido pedido = control.PedidoController.buscarPedidoPorId(idPedido);
+                        if (pedido != null) {
+                            Logg.info("Pedido encontrado:");
+                            System.out.println(pedido);
+                        } else {
+                            Logg.warning("Pedido não encontrado.");
+                        }
+                        break;
+                    case 3:
+                        Logg.info("Voltando ao menu anterior...");
+                        break;
+                    default:
+                        Logg.warning("Opção inválida, tente novamente.");
+                }
+
+            } catch (NumberFormatException e) {
+                Logg.warning("Informe somente números para a opção.");
+            } catch (InputMismatchException e) {
+                Logg.warning("Erro: informe um valor válido.");
+                if (scanner.hasNextLine()) {
+                    scanner.nextLine();
+                }
+            } catch (Exception e) {
+                Logg.severe("Erro inesperado: " + e.getMessage());
+            }
+        } while (opcao != 3);
     }
 
     public static void menuProduto(Scanner scanner) {
@@ -488,7 +546,51 @@ public class TelaFuncionario {
     }
 
     private static void consultarPedido(Scanner scanner) {
-        // Implementar consulta de pedido 
+        try {
+            Logg.info("=== Consultar Pedido ===");
+            System.out.println("1. Buscar por ID");
+            System.out.println("2. Listar todos os pedidos");
+            System.out.print("Escolha uma opção: ");
+
+            int opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            if (opcao == 1) {
+                System.out.print("ID do Pedido: ");
+                int id = scanner.nextInt();
+                scanner.nextLine();
+                
+                model.entity.Pedido pedido = control.PedidoController.buscarPedidoPorId(id);
+                
+                if (pedido != null) {
+                    Logg.info("Pedido encontrado:");
+                    System.out.println(pedido);
+                } else {
+                    Logg.warning("Pedido não encontrado.");
+                }
+            } else if (opcao == 2) {
+                java.util.List<model.entity.Pedido> pedidos = control.PedidoController.listarPedidos();
+                
+                if (pedidos != null && !pedidos.isEmpty()) {
+                    Logg.info("=== Lista de Pedidos ===");
+                    for (model.entity.Pedido p : pedidos) {
+                        System.out.println(p);
+                    }
+                } else {
+                    Logg.warning("Nenhum pedido encontrado.");
+                }
+            } else {
+                Logg.warning("Opção inválida.");
+            }
+
+        } catch (IllegalArgumentException e) {
+            Logg.warning("Erro: " + e.getMessage());
+        } catch (InputMismatchException e) {
+            Logg.warning("Erro: informe um valor válido.");
+            scanner.nextLine();
+        } catch (Exception e) {
+            Logg.severe("Erro inesperado: " + e.getMessage());
+        }
     }
 
     private static void editarCliente(int id, Cliente cli, Scanner scanner) {

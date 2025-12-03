@@ -262,4 +262,41 @@ public class ClienteDAO {
         return null;
     }
 
+    public static Cliente buscarPorId(int idCliente) {
+
+        String sql = """
+                    SELECT u.id_usu, u.nome_usu, u.cpf_usu, u.email_usu,
+                           u.telefone_usu, u.senha_usu, c.endereco_cli
+                    FROM cliente c
+                    JOIN usuario u ON u.id_usu = c.id_usu
+                    WHERE c.id_cli = ?
+                """;
+
+
+        try (Connection conn = DB.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idCliente);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                return new Cliente(
+                        rs.getInt("id_usu"),
+                        rs.getString("nome_usu"),
+                        rs.getString("cpf_usu"),
+                        rs.getString("email_usu"),
+                        rs.getString("telefone_usu"),
+                        rs.getString("senha_usu"),
+                        rs.getString("endereco_cli"));
+            }
+
+            return null;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("erro ao buscar cliente por id: " + e.getMessage(), e);
+        }
+
+    }
+
 }

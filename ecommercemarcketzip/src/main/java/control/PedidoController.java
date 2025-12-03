@@ -3,11 +3,27 @@ package control;
 import java.sql.Date;
 import java.util.List;
 
+import model.dao.ItemDePedidoDAO;
 import model.dao.PedidoDAO;
 import model.entity.Cliente;
 import model.entity.Pedido;
 
 public class PedidoController {
+
+    /**
+     * Valida se um pedido possui pelo menos um produto
+     * @param pedido Pedido a validar
+     * @return true se o pedido possui produtos, false caso contrário
+     */
+    public static boolean validarProdutosNoPedido(Pedido pedido) {
+        if (pedido == null) {
+            return false;
+        }
+        
+        List<model.entity.ItemDePedido> itens = ItemDePedidoDAO.listarItens(pedido);
+        return itens != null && !itens.isEmpty();
+    }
+
     public static Pedido criarPedido(Cliente cliente) {
 
         if (cliente == null) {
@@ -61,6 +77,10 @@ public class PedidoController {
 
     public static Pedido buscarPedidoPorId(int idPedido) {
         return PedidoDAO.buscarPorId(idPedido);
+    }
+
+    public static Pedido buscarPedidoPorIdSemValidacao(int idPedido) {
+        return PedidoDAO.buscarPorIdSemValidacao(idPedido);
     }
 
     public static boolean finalizarPedido() {
