@@ -19,7 +19,7 @@ public class TelaFuncionario {
             Logg.info("=== Menu do Funcionário ===");
             System.out.println("1. Gerenciar pedidos de clientes");
             System.out.println("2. Gerenciar Produtos");
-            System.out.println("3. Gerenciar esta conta");
+            System.out.println("3. Gerenciamento de conta");
             System.out.println("4. Sair");
             System.out.print("Escolha uma opção: ");
 
@@ -36,8 +36,11 @@ public class TelaFuncionario {
                     case 3:
                         menuConta(scanner, func);
                         break;
+                    case 4:
+                    break;
                     default:
                         Logg.warning("Opção inválida, tente novamente.");
+                        break;
                 }
 
             } catch (NumberFormatException e) {
@@ -58,7 +61,9 @@ public class TelaFuncionario {
         String nome, email, telefone, senha, cargo;
         System.out.println("1. Atualizar informações desta conta");
         System.out.println("2. Excluir esta conta");
-        System.out.println("3. voltar");
+        System.out.println("3. Mostrar todos os clientes");
+        System.out.println("4. Mostrar todos os funcionarios");
+        System.out.println("5. voltar");
         opcao = leitor.nextInt();
         leitor.nextLine();
 
@@ -93,7 +98,24 @@ public class TelaFuncionario {
                     return;
                 }
                 break;
+
+                case 3:
+                for(Cliente cliente: ClienteController.listarClientes()){
+                    System.out.println(cliente);
+                }
+                break;
+
+                case 4:
+                for(Funcionario func : FuncionarioController.listarFuncionarios()){
+                    System.out.println(func);
+                }
+                break;
+
+                case 5:
+                return;
+  
             default:
+                Logg.warning("Opção inválida!");
                 break;
         }
 
