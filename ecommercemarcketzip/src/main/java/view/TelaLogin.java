@@ -12,7 +12,6 @@ public class TelaLogin {
     public static Funcionario login(Scanner scanner) {
         String nome, senha;
         Funcionario func = null;
-        //remover try
         try {
             Logg.info("==LOGIN==");
             boolean loginRealizado = false;
@@ -33,7 +32,7 @@ public class TelaLogin {
 
                     if (nome.equals("0")) {
                         Logg.info("Retornando ao menu principal...");
-                        return null; // Retorna null para indicar que o login não foi realizado
+                        return null;
                     }
 
                     func = FuncionarioController.realizarLogin(nome, senha);
@@ -58,7 +57,6 @@ public class TelaLogin {
     public static Cliente loginCliente(Scanner scanner) {
         String nome, senha;
         Cliente cli = null;
-        //remover try
         try {
             Logg.info("==LOGIN CLIENTE==");
             boolean loginRealizado = false;
@@ -79,7 +77,7 @@ public class TelaLogin {
 
                     if (nome.equals("0")) {
                         Logg.info("Retornando ao menu principal...");
-                        return null; // Retorna null para indicar que o login não foi realizado
+                        return null;
                     }
 
                     cli = ClienteController.realizarLoginCliente(nome, senha);

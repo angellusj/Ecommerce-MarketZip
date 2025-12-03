@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import control.ClienteController;
-import control.FuncionarioController;
 import model.entity.Cliente;
 import model.entity.Funcionario;
 import model.entity.Pedido;
@@ -53,7 +52,6 @@ public class TelaFuncionario {
     }
 
     private static void menuPedido(Scanner scanner) {
-        // Implementar menu de gerenciamento de clientes
         int opcao = 0;
 
         do {
@@ -76,7 +74,6 @@ public class TelaFuncionario {
                             scanner.nextLine();
                         Logg.info("=== Excluir Pedido ===");
                         
-                        // Listar pedidos ativos
                         List<model.entity.Pedido> pedidosAtivos = control.PedidoController.listarPedidos();
                         if (pedidosAtivos == null || pedidosAtivos.isEmpty()) {
                             Logg.warning("Nenhum pedido ativo encontrado.");
@@ -115,7 +112,6 @@ public class TelaFuncionario {
                         if (scanner.hasNextLine())
                             scanner.nextLine();
                         
-                        // Lista todos os pedidos ativos
                         List<Pedido> pedidosAtivosParaFinalizar = control.PedidoController.listarTodosPedidosAtivos();
                         if (pedidosAtivosParaFinalizar.isEmpty()) {
                             Logg.warning("Nenhum pedido ativo encontrado para finalizar.");
@@ -211,7 +207,6 @@ public class TelaFuncionario {
                         if (scanner.hasNextLine())
                             scanner.nextLine();
                         
-                        // Lista todos os pedidos (ativos e finalizados)
                         List<model.entity.Pedido> todosOsPedidos = control.PedidoController.listarPedidosFeitos();
                         if (todosOsPedidos.isEmpty()) {
                             Logg.warning("Nenhum pedido encontrado.");
@@ -354,7 +349,6 @@ public class TelaFuncionario {
             model.entity.Produto produto = null;
 
             if (opcao == 1) {
-                // Lista todos os produtos
                 List<model.entity.Produto> produtos = control.ProdutoController.listarProdutos();
                 if (produtos == null || produtos.isEmpty()) {
                     Logg.warning("Nenhum produto cadastrado.");
