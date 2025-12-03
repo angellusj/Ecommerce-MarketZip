@@ -1,6 +1,6 @@
 package model.entity;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,7 +86,7 @@ public class Pedido {
         if (itens != null && !itens.isEmpty()) {
             sb.append("║ PRODUTOS:\n");
             for (ItemDePedido item : itens) {
-                sb.append("║  • ID Produto: ").append(item.getIdProduto());
+                sb.append("║  ID Produto: ").append(item.getIdProduto());
                 sb.append(" | Quantidade: ").append(item.getQuantidade()).append("\n");
             }
         } else {
