@@ -9,6 +9,7 @@ import model.entity.Produto;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 public class PedidoDAO {
 
@@ -211,10 +212,12 @@ public class PedidoDAO {
         String sql = "UPDATE pedido SET data_pedido = ?, finalizar_pedido = ?, valor_total_pedido = ? WHERE id_pedido = ?";
         try (Connection conn = DB.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDate(1, pedido.getData());
+            java.sql.Date dataSQL = new java.sql.Date(pedido.getData().getTime());
+            ps.setDate(1, dataSQL);
             ps.setBoolean(2, pedido.getFinalizar());
             ps.setDouble(3, pedido.getValorTotal());
             ps.setInt(4, pedido.getIdPedido());
+
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao atualizar pedido: " + e.getMessage(), e);
@@ -269,7 +272,16 @@ public class PedidoDAO {
                     boolean fin = rs.getBoolean("finalizar_pedido");
                     double total = rs.getDouble("valor_total_pedido");
                     Pedido p = new Pedido(id, data, fin, total, null);
+
+                    int idCli = rs.getInt("id_cli");
+                    Cliente cliente = ClienteDAO.buscarPorIdCliente(idCli);
+                    p.setCliente(cliente);
+
+                    List<ItemDePedido> itens = ItemDePedidoDAO.listarItens(p);
+                    p.setItens(itens);
+
                     pedidos.add(p);
+
                 }
             }
         } catch (SQLException e) {
@@ -308,41 +320,45 @@ public class PedidoDAO {
         return null;
     }
 
-    /*public static Pedido buscarPorId(int idPedido) {
-
-        String sql = "SELECT id_pedido, data_pedido, finalizar_pedido, id_cli, valor_total_pedido FROM pedido WHERE id_pedido = ?";
-        try (var conn = DB.getConnection()) {
-            assert conn != null;
-            try (var pstmt = conn.prepareStatement(sql)) {
-                pstmt.setInt(1, idPedido);
-                ResultSet rs = pstmt.executeQuery();
-                if (rs.next()) {
-                    int id = rs.getInt("id_pedido");
-                    Date data = rs.getDate("data_pedido");
-                    boolean fin = rs.getBoolean("finalizar_pedido");
-                    double total = rs.getDouble("valor_total_pedido");
-                    int idCliente = rs.getInt("id_cli");
-                    Cliente cliente = ClienteDAO.buscarPorId(idCliente);
-
-                    Pedido pedido = new Pedido(id, data, fin, total, cliente);
-                    
-                    // Carregar itens do pedido
-                    java.util.List<ItemDePedido> itens = ItemDePedidoDAO.listarItens(pedido);
-                    pedido.setItens(itens);
-                    
-                    // Validar se o pedido possui pelo menos um produto
-                    if (itens == null || itens.isEmpty()) {
-                        return null;
-                    }
-                    
-                    return pedido;
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
-    }*/
+    /*
+     * public static Pedido buscarPorId(int idPedido) {
+     * 
+     * String sql =
+     * "SELECT id_pedido, data_pedido, finalizar_pedido, id_cli, valor_total_pedido FROM pedido WHERE id_pedido = ?"
+     * ;
+     * try (var conn = DB.getConnection()) {
+     * assert conn != null;
+     * try (var pstmt = conn.prepareStatement(sql)) {
+     * pstmt.setInt(1, idPedido);
+     * ResultSet rs = pstmt.executeQuery();
+     * if (rs.next()) {
+     * int id = rs.getInt("id_pedido");
+     * Date data = rs.getDate("data_pedido");
+     * boolean fin = rs.getBoolean("finalizar_pedido");
+     * double total = rs.getDouble("valor_total_pedido");
+     * int idCliente = rs.getInt("id_cli");
+     * Cliente cliente = ClienteDAO.buscarPorId(idCliente);
+     * 
+     * Pedido pedido = new Pedido(id, data, fin, total, cliente);
+     * 
+     * // Carregar itens do pedido
+     * java.util.List<ItemDePedido> itens = ItemDePedidoDAO.listarItens(pedido);
+     * pedido.setItens(itens);
+     * 
+     * // Validar se o pedido possui pelo menos um produto
+     * if (itens == null || itens.isEmpty()) {
+     * return null;
+     * }
+     * 
+     * return pedido;
+     * }
+     * }
+     * } catch (SQLException e) {
+     * System.out.println(e.getMessage());
+     * }
+     * return null;
+     * }
+     */
 
     public static Pedido buscarPorIdSemValidacao(int idPedido) {
         String sql = "SELECT id_pedido, data_pedido, finalizar_pedido, id_cli, valor_total_pedido FROM pedido WHERE id_pedido = ?";
@@ -360,11 +376,11 @@ public class PedidoDAO {
                     Cliente cliente = ClienteDAO.buscarPorId(idCliente);
 
                     Pedido pedido = new Pedido(id, data, fin, total, cliente);
-                    
+
                     // Carregar itens do pedido
                     java.util.List<ItemDePedido> itens = ItemDePedidoDAO.listarItens(pedido);
                     pedido.setItens(itens);
-                    
+
                     return pedido;
                 }
 
