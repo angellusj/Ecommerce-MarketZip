@@ -5,12 +5,14 @@ import model.entity.*;
 import java.util.List;
 import java.util.Scanner;
 import utils.Logg;
+import control.ClienteController;
 import control.PedidoController;
 import control.ProdutoController;
 
 public class TelaCliente {
     public static void menuCliente(Cliente cliente, Scanner leitor) {
         int opcao;
+        String nome, email, senha, endereco, telefone;
 
         do {
             Logg.info("=== MENU DE CLIENTE ===");
@@ -20,7 +22,9 @@ public class TelaCliente {
             System.out.println("4 - Excluir um pedido");
             System.out.println("5 - Listar pedidos ativos");
             System.out.println("6 - Listar pedidos concluídos");
-            System.out.println("7 - Sair");
+            System.out.println("7 - excluir minha conta");
+            System.out.println("8 - Atualizar minhas informações");
+            System.out.println("9 - Sair");
             opcao = leitor.nextInt();
 
             switch (opcao) {
@@ -93,11 +97,42 @@ public class TelaCliente {
                             System.out.println(p);
                         }
                     }
+                case 7:
+                    if (ClienteController.deletarCliente(cliente)) {
+                        Logg.info("Deletado!");
+                        return;
+                    } else {
+                        Logg.warning("Algo deu errado!");
+                    }
 
+                    break;
+                case 8:
+                    leitor.nextLine();
+                    System.out.println("Nome novo: ");
+                    nome = leitor.nextLine();
+
+                    System.out.println("Email novo: ");
+                    email = leitor.nextLine();
+
+                    System.out.println("Senha nova: ");
+                    senha = leitor.nextLine();
+
+                    System.out.println("Telefone novo: ");
+                    telefone = leitor.nextLine();
+
+                    System.out.println("Endereço novo: ");
+                    endereco = leitor.nextLine();
+
+                    cliente = new Cliente(cliente.getIdUsuario(), nome, cliente.getCpf(), email, telefone, senha,
+                            endereco);
+                    if (ClienteController.atualizarCliente(cliente)) {
+                        Logg.info("Atualizado!");
+                    }
+                    break;
                 default:
                     Logg.warning("Opção inválida, tente de novo!");
                     break;
             }
-        } while (opcao != 7);
+        } while (opcao != 9);
     }
 }

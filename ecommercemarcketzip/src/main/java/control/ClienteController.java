@@ -2,7 +2,9 @@ package control;
 
 import java.util.List;
 import model.dao.ClienteDAO;
+import model.dao.UsuarioDAO;
 import model.entity.Cliente;
+import utils.Logg;
 
 
 public class ClienteController {
@@ -51,6 +53,11 @@ public class ClienteController {
     public static boolean atualizarCliente(Cliente cliente) {
         if (cliente == null) {
             System.out.println("Objeto nulo");
+            return false;
+        }
+
+        if(UsuarioDAO.buscarIdPorEmail(buscarPorCpf(cliente.getCpf()).getEmail()) != null){
+            Logg.warning("Já existe um email assim :(");
             return false;
         }
 
