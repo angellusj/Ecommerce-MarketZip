@@ -94,6 +94,38 @@ public class FuncionarioDAO {
         }
     }
 
+    public static Funcionario buscarPorNome(String nome){
+        var sql = """
+                    SELECT f.id_func, u.id_usu, u.nome_usu, u.cpf_usu, u.email_usu,
+                           u.telefone_usu, u.senha_usu, f.cargo_func
+                    FROM funcionario f
+                    JOIN usuario u ON u.id_usu = f.id_usu
+                    WHERE u.nome_usu = ?
+                """;
+        try (var conn = DB.getConnection()){
+            assert conn != null;
+            try (var pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, nome);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                            int id =rs.getInt("id_usu");
+                            String nomef = rs.getString("nome_usu");
+                            String cpf =rs.getString("cpf_usu");
+                            String email = rs.getString("email_usu");
+                            String telefone = rs.getString("telefone_usu");
+                            String senha = rs.getString("senha_usu");
+                            String cargo = rs.getString("cargo_func");
+
+                            return new Funcionario(id, nomef, cpf, email, telefone, senha, cargo);
+                }
+                
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
     public static List<Funcionario> listarFuncionarios() {
 
         String sql = """

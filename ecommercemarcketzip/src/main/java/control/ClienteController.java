@@ -82,11 +82,11 @@ public class ClienteController {
             throw new IllegalArgumentException("Senha não pode ser nula ou vazia.");
         }
 
-        Cliente cliente = ClienteDAO.buscarPorCpf(login.toUpperCase());
+        Cliente cliente = ClienteDAO.buscarPorCpf(login);
         if (cliente == null) {
             return null;
         }
-        if (cliente.getSenha().equals(senha)) {
+        if (cliente.getSenha().equals(senha.toUpperCase())) {
             return cliente;
         }
         return null;

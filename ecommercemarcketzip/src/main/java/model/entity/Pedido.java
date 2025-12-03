@@ -10,7 +10,7 @@ public class Pedido {
     private Boolean finalizar;
     private double valorTotal;
     private Cliente cliente;
-    private java.util.List<ItemDePedido> itens;
+    private List<ItemDePedido> itens;
 
     public Pedido(int idPedido, Date data, Boolean finalizar, double valorTotal, Cliente cliente) {
         this.idPedido = idPedido;

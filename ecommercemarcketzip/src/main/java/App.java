@@ -25,7 +25,7 @@ public class App {
         do {
             Logg.info("=== Menu Principal ===");
             System.out.println("1. Login");
-            System.out.println("2 - Cadastrar um usuario");
+            System.out.println("2. Cadastrar um usuario");
             System.out.println("3. Sair");
             System.out.print("Escolha uma opcao: ");
 
@@ -45,7 +45,7 @@ public class App {
                         scanner.nextLine();
 
                         if (tipo == 1) {
-                            System.out.print("CPF: ");
+                            System.out.print("Login: ");
                             login = scanner.nextLine();
 
                             System.out.print("Senha: ");

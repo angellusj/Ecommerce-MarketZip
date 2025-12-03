@@ -8,19 +8,8 @@ import control.ClienteController;
 import control.FuncionarioController;
 import model.entity.Cliente;
 import model.entity.Funcionario;
+import model.entity.Pedido;
 import utils.Logg;
-
-//finalizarPedido
-//visualizarPedido
-//excluirPedido
-//listarTodosPedidosAtivos
-//listarPedidosConcluidosDoCliente
-//listarTodosPedidosFeitos
-//criarProduto
-//mostrarProduto
-//atualizarProduto
-//excluirProduto
-//listarProdutos
 
 public class TelaFuncionario {
     public static void menuFuncionario(Funcionario func, Scanner scanner) {
@@ -43,24 +32,6 @@ public class TelaFuncionario {
                     case 2:
                         menuProduto(scanner);
                         break;
-                        /*if (scanner.hasNextLine())
-                            scanner.nextLine();
-                        Logg.info("Informe o CPF do cliente ou digite 0 para volar ao menu principal");
-                        System.out.print("CPF: ");
-                        String cpf = scanner.nextLine();
-                        if (cpf.equals("0")) {
-                            Logg.info("Voltando ao menu principal...");
-                            break;
-                        }
-                        Cliente cli = ClienteController.buscarPorCpf(cpf);
-                        if (cli != null) {
-                            Logg.info("Cliente encontrado!");
-                            System.out.println(cli);
-                            gerarPedido(func, cli, scanner);
-                        } else {
-                            Logg.warning("Cliente não encontrado.");
-                        }
-                        break;*/
                     case 3:
                         Logg.info("Saindo do menu do funcionário...");
                         break;
@@ -80,13 +51,6 @@ public class TelaFuncionario {
             }
         } while (opcao != 3);
     }
-
-    //finalizarPedido
-//visualizarPedido
-//excluirPedido
-//listarTodosPedidosAtivos
-//listarPedidosConcluidosDoCliente
-//listarTodosPedidosFeitos
 
     private static void menuPedido(Scanner scanner) {
         // Implementar menu de gerenciamento de clientes
@@ -150,6 +114,20 @@ public class TelaFuncionario {
                     case 3:
                         if (scanner.hasNextLine())
                             scanner.nextLine();
+                        
+                        // Lista todos os pedidos ativos
+                        List<Pedido> pedidosAtivosParaFinalizar = control.PedidoController.listarTodosPedidosAtivos();
+                        if (pedidosAtivosParaFinalizar.isEmpty()) {
+                            Logg.warning("Nenhum pedido ativo encontrado para finalizar.");
+                            break;
+                        }
+                        
+                        Logg.info("=== Lista de Pedidos Ativos ===");
+                        System.out.printf("%-5s %-20s%n", "ID", "Status");
+                        System.out.println("-".repeat(27));
+                        pedidosAtivosParaFinalizar.forEach(p -> System.out.printf("%-5d %-20s%n", p.getIdPedido(), (p.getFinalizar() ? "Finalizado" : "Ativo")));
+                        System.out.println();
+                        
                         Logg.info("=== Finalizar Pedido ===");
                         System.out.print("ID do Pedido: ");
                         int idPedidoFinalizar = scanner.nextInt();
@@ -232,6 +210,20 @@ public class TelaFuncionario {
                     case 2:
                         if (scanner.hasNextLine())
                             scanner.nextLine();
+                        
+                        // Lista todos os pedidos (ativos e finalizados)
+                        List<model.entity.Pedido> todosOsPedidos = control.PedidoController.listarPedidosFeitos();
+                        if (todosOsPedidos.isEmpty()) {
+                            Logg.warning("Nenhum pedido encontrado.");
+                            break;
+                        }
+                        
+                        Logg.info("=== Lista de Todos os Pedidos ===");
+                        System.out.printf("%-5s %-20s%n", "ID", "Status");
+                        System.out.println("-".repeat(27));
+                        todosOsPedidos.forEach(p -> System.out.printf("%-5d %-20s%n", p.getIdPedido(), (p.getFinalizar() ? "Finalizado" : "Ativo")));
+                        System.out.println();
+                        
                         Logg.info("=== Buscar Pedido por ID ===");
                         System.out.print("ID do Pedido: ");
                         int idPedido = scanner.nextInt();
@@ -362,6 +354,19 @@ public class TelaFuncionario {
             model.entity.Produto produto = null;
 
             if (opcao == 1) {
+                // Lista todos os produtos
+                List<model.entity.Produto> produtos = control.ProdutoController.listarProdutos();
+                if (produtos == null || produtos.isEmpty()) {
+                    Logg.warning("Nenhum produto cadastrado.");
+                    return;
+                }
+                
+                Logg.info("=== Lista de Produtos ===");
+                System.out.printf("%-5s %-30s %-10s%n", "ID", "Nome", "Preço");
+                System.out.println("-".repeat(47));
+                produtos.forEach(p -> System.out.printf("%-5d %-30s R$ %.2f%n", p.getIdProduto(), p.getNome(), p.getPreco()));
+                System.out.println();
+                
                 System.out.print("ID do Produto: ");
                 int id = scanner.nextInt();
                 scanner.nextLine();
@@ -510,93 +515,4 @@ public class TelaFuncionario {
             Logg.severe("Erro ao listar produtos: " + e.getMessage());
         }
     }
-
-    /*private static void cadastrarCliente(Scanner scanner) {
-        String nome, cpf, telefone, endereco, email, senha;
-        int idUsuario;
-        try {
-            if (scanner.hasNextLine())
-                scanner.nextLine();
-
-            Logg.info("===Cadastro de Cliente===");
-            System.out.print("Nome: ");
-            nome = scanner.nextLine();
-            System.out.print("CPF: ");
-            cpf = scanner.nextLine();
-            System.out.print("Email: ");
-            email = scanner.nextLine();
-            System.out.print("Telefone: ");
-            telefone = scanner.nextLine();
-            System.out.print("Senha: ");
-            senha = scanner.nextLine();
-            System.out.print("Endereço: ");
-            endereco = scanner.nextLine();
-            System.out.print("ID do Usuário: ");
-            idUsuario = scanner.nextInt();
-
-            ClienteController.cadastrarCliente(idUsuario, nome, cpf, email, telefone, senha, endereco);
-            Logg.info("Cliente cadastrado com sucesso!");
-        } catch (Exception e) {
-            Logg.warning(e.getMessage());
-        }
-    }
-
-    private static void gerarPedido(Funcionario func, Cliente cli, Scanner scanner) {
-        // Implementar geração de pedido
-    }
-
-    private static void consultarPedido(Scanner scanner) {
-        try {
-            Logg.info("=== Consultar Pedido ===");
-            System.out.println("1. Buscar por ID");
-            System.out.println("2. Listar todos os pedidos");
-            System.out.print("Escolha uma opção: ");
-
-            int opcao = scanner.nextInt();
-            scanner.nextLine();
-
-            if (opcao == 1) {
-                System.out.print("ID do Pedido: ");
-                int id = scanner.nextInt();
-                scanner.nextLine();
-                
-                model.entity.Pedido pedido = control.PedidoController.buscarPedidoPorId(id);
-                
-                if (pedido != null) {
-                    Logg.info("Pedido encontrado:");
-                    System.out.println(pedido);
-                } else {
-                    Logg.warning("Pedido não encontrado.");
-                }
-            } else if (opcao == 2) {
-                java.util.List<model.entity.Pedido> pedidos = control.PedidoController.listarPedidos();
-                
-                if (pedidos != null && !pedidos.isEmpty()) {
-                    Logg.info("=== Lista de Pedidos ===");
-                    for (model.entity.Pedido p : pedidos) {
-                        System.out.println(p);
-                    }
-                } else {
-                    Logg.warning("Nenhum pedido encontrado.");
-                }
-            } else {
-                Logg.warning("Opção inválida.");
-            }
-
-        } catch (IllegalArgumentException e) {
-            Logg.warning("Erro: " + e.getMessage());
-        } catch (InputMismatchException e) {
-            Logg.warning("Erro: informe um valor válido.");
-            scanner.nextLine();
-        } catch (Exception e) {
-            Logg.severe("Erro inesperado: " + e.getMessage());
-        }
-    }
-
-    private static void editarCliente(int id, Cliente cli, Scanner scanner) {
-        // Implementar edição de cliente
-    }
-
-    public static void main(String[] args) {
-    }*/
 }

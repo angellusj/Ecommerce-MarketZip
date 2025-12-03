@@ -229,7 +229,7 @@ public class ClienteDAO {
 
     public static List<Cliente> listarClientes() {
         String sql = """
-                    SELECT u.id_usu, u.nome_usu, u.cpf_usu, u.email_usu,
+                    SELECT c.id_cli, u.id_usu, u.nome_usu, u.cpf_usu, u.email_usu,
                            u.telefone_usu, u.senha_usu, c.endereco_cli
                     FROM cliente c
                     JOIN usuario u ON u.id_usu = c.id_usu
@@ -243,15 +243,15 @@ public class ClienteDAO {
                 var rs = pstmt.executeQuery();
 
                 while (rs.next()) {
-                    int id = rs.getInt("id_usu");
+                    int idCliente = rs.getInt("id_cli");
+                    int idUsuario = rs.getInt("id_usu");
                     String nome = rs.getString("nome_usu");
                     String cpf = rs.getString("cpf_usu");
                     String email = rs.getString("email_usu");
                     String telefone = rs.getString("telefone_usu");
                     String senha = rs.getString("senha_usu");
                     String endereco = rs.getString("endereco_cli");
-                    var c = new Cliente(id, nome, cpf, email, telefone, senha, endereco);
-                    c.setIdUsuario(id);
+                    var c = new Cliente(idCliente, idUsuario, nome, cpf, email, telefone, senha, endereco);
                     clientes.add(c);
                 }
                 return clientes;

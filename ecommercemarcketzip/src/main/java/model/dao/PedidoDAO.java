@@ -280,7 +280,10 @@ public class PedidoDAO {
                     List<ItemDePedido> itens = ItemDePedidoDAO.listarItens(p);
                     p.setItens(itens);
 
-                    pedidos.add(p);
+                    // Só adiciona o pedido se tiver pelo menos um item
+                    if (!itens.isEmpty()) {
+                        pedidos.add(p);
+                    }
 
                 }
             }

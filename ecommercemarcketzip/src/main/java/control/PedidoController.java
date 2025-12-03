@@ -56,6 +56,10 @@ public class PedidoController {
         return PedidoDAO.listarTodosPedidosAtivos();
     }
 
+    public static List<Pedido> listarTodosPedidosAtivos() {
+        return PedidoDAO.listarTodosPedidosAtivos();
+    }
+
     public static List<Pedido> listarPedidosFeitos() {
         return PedidoDAO.listarPedidosFeitos();
     }

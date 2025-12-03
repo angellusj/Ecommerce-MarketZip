@@ -40,6 +40,14 @@ public class FuncionarioController {
         return FuncionarioDAO.buscarPorCpf(cpf);
     }
 
+    public Funcionario buscarPorNome(String nome) {
+        if (nome == null || nome.isBlank()) {
+            System.out.println("Nome vazio");
+            return null;
+        }
+        return FuncionarioDAO.buscarPorNome(nome);
+    }
+
     public static boolean atualizarFuncionario(Funcionario funcionario) {
         if (funcionario == null) {
             System.out.println("objeto nulo");
@@ -72,7 +80,7 @@ public class FuncionarioController {
             throw new IllegalArgumentException("Senha não pode ser nula ou vazia.");
         }
 
-        Funcionario funcionario = FuncionarioDAO.buscarPorCpf(login);
+        Funcionario funcionario = FuncionarioDAO.buscarPorNome(login);
         if (funcionario == null) {
             return null;
         }
