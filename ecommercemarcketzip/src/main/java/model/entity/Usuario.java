@@ -67,7 +67,7 @@ public abstract class Usuario {
 
     public String toString() {
         return "ID: " + idUsuario + "\nnome: " + nome + "\ncpf:" + cpf + "\nemail:" + email
-                + "\ntelefone:" + telefone; // nao faz sentido exibir a senha
+                + "\ntelefone:" + telefone;
     }
 }
     

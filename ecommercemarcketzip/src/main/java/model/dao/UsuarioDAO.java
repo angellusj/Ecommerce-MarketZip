@@ -93,7 +93,7 @@ public class UsuarioDAO {
             return (ps.executeUpdate() > 0 ? true : false);
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao atualizar usaurio: " + e.getMessage());
+            throw new RuntimeException("Erro ao atualizar usuário: " + e.getMessage());
         }
     }
 

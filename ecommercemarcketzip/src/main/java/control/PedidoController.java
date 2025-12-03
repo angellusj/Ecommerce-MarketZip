@@ -10,12 +10,6 @@ import model.entity.Pedido;
 import model.entity.Produto;
 
 public class PedidoController {
-
-    /**
-     * Valida se um pedido possui pelo menos um produto
-     * @param pedido Pedido a validar
-     * @return true se o pedido possui produtos, false caso contrário
-     */
     public static boolean validarProdutosNoPedido(Pedido pedido) {
         if (pedido == null) {
             return false;

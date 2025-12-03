@@ -50,7 +50,7 @@ public class ClienteController {
 
     public static boolean atualizarCliente(Cliente cliente) {
         if (cliente == null) {
-            System.out.println("objeto nulo");
+            System.out.println("Objeto nulo");
             return false;
         }
 

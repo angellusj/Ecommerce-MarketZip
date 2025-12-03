@@ -2,7 +2,6 @@ package model.dao;
 
 import model.db.DB;
 import model.entity.Cliente;
-import model.entity.Usuario;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class ClienteDAO {
 
                 ResultSet rs = ps.executeQuery();
                 if (!rs.next()) {
-                    throw new RuntimeException("erro ao gerar id do cliente");
+                    throw new RuntimeException("Erro ao gerar ID do cliente");
                 }
                 idClienteGerado = rs.getInt(1);
                 cliente.setIdCliente(idClienteGerado);
@@ -57,7 +56,7 @@ public class ClienteDAO {
             } catch (SQLException ignored) {
             }
 
-            throw new RuntimeException("erro ao inserir cliente: " + e.getMessage(), e);
+            throw new RuntimeException("Erro ao inserir cliente: " + e.getMessage(), e);
 
         } finally {
             try {
@@ -140,7 +139,7 @@ public class ClienteDAO {
             return null;
 
         } catch (SQLException e) {
-            throw new RuntimeException("erro ao buscar cliente: " + e.getMessage(), e);
+            throw new RuntimeException("Erro ao buscar cliente: " + e.getMessage(), e);
         }
     }
 
@@ -223,7 +222,7 @@ public class ClienteDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("erro ao excluir cliente: " + e.getMessage());
+            System.out.println("Erro ao excluir cliente: " + e.getMessage());
         }
     }
 
@@ -294,7 +293,7 @@ public class ClienteDAO {
             return null;
 
         } catch (SQLException e) {
-            throw new RuntimeException("erro ao buscar cliente por id: " + e.getMessage(), e);
+            throw new RuntimeException("Erro ao buscar cliente por ID: " + e.getMessage(), e);
         }
 
     }

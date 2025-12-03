@@ -280,10 +280,7 @@ public class PedidoDAO {
                     List<ItemDePedido> itens = ItemDePedidoDAO.listarItens(p);
                     p.setItens(itens);
 
-                    // Só adiciona o pedido se tiver pelo menos um item
-                    if (!itens.isEmpty()) {
-                        pedidos.add(p);
-                    }
+                    pedidos.add(p);
 
                 }
             }
@@ -323,46 +320,6 @@ public class PedidoDAO {
         return null;
     }
 
-    /*
-     * public static Pedido buscarPorId(int idPedido) {
-     * 
-     * String sql =
-     * "SELECT id_pedido, data_pedido, finalizar_pedido, id_cli, valor_total_pedido FROM pedido WHERE id_pedido = ?"
-     * ;
-     * try (var conn = DB.getConnection()) {
-     * assert conn != null;
-     * try (var pstmt = conn.prepareStatement(sql)) {
-     * pstmt.setInt(1, idPedido);
-     * ResultSet rs = pstmt.executeQuery();
-     * if (rs.next()) {
-     * int id = rs.getInt("id_pedido");
-     * Date data = rs.getDate("data_pedido");
-     * boolean fin = rs.getBoolean("finalizar_pedido");
-     * double total = rs.getDouble("valor_total_pedido");
-     * int idCliente = rs.getInt("id_cli");
-     * Cliente cliente = ClienteDAO.buscarPorId(idCliente);
-     * 
-     * Pedido pedido = new Pedido(id, data, fin, total, cliente);
-     * 
-     * // Carregar itens do pedido
-     * java.util.List<ItemDePedido> itens = ItemDePedidoDAO.listarItens(pedido);
-     * pedido.setItens(itens);
-     * 
-     * // Validar se o pedido possui pelo menos um produto
-     * if (itens == null || itens.isEmpty()) {
-     * return null;
-     * }
-     * 
-     * return pedido;
-     * }
-     * }
-     * } catch (SQLException e) {
-     * System.out.println(e.getMessage());
-     * }
-     * return null;
-     * }
-     */
-
     public static Pedido buscarPorIdSemValidacao(int idPedido) {
         String sql = "SELECT id_pedido, data_pedido, finalizar_pedido, id_cli, valor_total_pedido FROM pedido WHERE id_pedido = ?";
         try (var conn = DB.getConnection()) {
@@ -380,7 +337,6 @@ public class PedidoDAO {
 
                     Pedido pedido = new Pedido(id, data, fin, total, cliente);
 
-                    // Carregar itens do pedido
                     java.util.List<ItemDePedido> itens = ItemDePedidoDAO.listarItens(pedido);
                     pedido.setItens(itens);
 
@@ -390,7 +346,7 @@ public class PedidoDAO {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar pedido por id: " + e.getMessage(), e);
+            throw new RuntimeException("Erro ao buscar pedido por ID: " + e.getMessage(), e);
         }
 
         return null;

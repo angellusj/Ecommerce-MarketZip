@@ -36,7 +36,7 @@ public class FuncionarioDAO {
                 if (rs.next()) {
                     idFuncGerado = rs.getInt("id_func");
                 } else {
-                    throw new RuntimeException("erro ao gerar id_func.");
+                    throw new RuntimeException("Erro ao gerar id_func.");
                 }
             }
 
@@ -49,7 +49,7 @@ public class FuncionarioDAO {
                     conn.rollback();
             } catch (SQLException ignored) {
             }
-            throw new RuntimeException("Erro ao inserir funcionario: " + e.getMessage(), e);
+            throw new RuntimeException("Erro ao inserir funcionário: " + e.getMessage(), e);
 
         } finally {
             try {
@@ -90,7 +90,7 @@ public class FuncionarioDAO {
             return null;
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar funcionario: " + e.getMessage());
+            throw new RuntimeException("Erro ao buscar funcionário: " + e.getMessage());
         }
     }
 
@@ -194,7 +194,7 @@ public class FuncionarioDAO {
             return true;
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao atualizar funcionario: " + e.getMessage());
+            throw new RuntimeException("Erro ao atualizar funcionário: " + e.getMessage());
 
         }
     }

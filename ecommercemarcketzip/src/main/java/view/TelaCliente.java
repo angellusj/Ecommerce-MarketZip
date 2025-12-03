@@ -19,13 +19,14 @@ public class TelaCliente {
             System.out.println("3 - Remover um item de um pedido");
             System.out.println("4 - Excluir um pedido");
             System.out.println("5 - Listar pedidos ativos");
-            System.out.println("6 - Listar pedidos concluidos");
+            System.out.println("6 - Listar pedidos concluídos");
             System.out.println("7 - Sair");
             opcao = leitor.nextInt();
 
             switch (opcao) {
                 case 1:
                     PedidoController.criarPedido(cliente);
+                    Logg.info("Criado!");
                     break;
 
                 case 2:
@@ -66,14 +67,19 @@ public class TelaCliente {
                     for (Pedido pedidos : PedidoController.listarPedidosAtivosDoCliente(cliente)) {
                         System.out.println(pedidos);
                     }
-                    System.out.println("Qual remover?");
+                    System.out.println("Qual remover? Digite o ID");
                     idPedido = leitor.nextInt();
                     PedidoController.excluirPedido(idPedido);
                     break;
 
                 case 5:
-                    for (Pedido pedidos : PedidoController.listarPedidosAtivosDoCliente(cliente)) {
-                        System.out.println(pedidos);
+                    if (PedidoController.listarPedidosAtivosDoCliente(cliente).isEmpty()) {
+                        Logg.info("Não há pedidos");
+                    } else {
+                        for (Pedido pedidos : PedidoController.listarPedidosAtivosDoCliente(cliente)) {
+                            System.out.println(pedidos);
+                        }
+
                     }
                     break;
 
@@ -81,7 +87,7 @@ public class TelaCliente {
                     List<Pedido> concluidos = PedidoController.listarPedidosConcluidosDoCliente(cliente);
 
                     if (concluidos.isEmpty()) {
-                        Logg.info("Nao ha pedidos concluidos!");
+                        Logg.info("Não há pedidos concluídos!");
                     } else {
                         for (Pedido p : concluidos) {
                             System.out.println(p);
@@ -89,7 +95,7 @@ public class TelaCliente {
                     }
 
                 default:
-                    Logg.warning("Opçao invalida, tente de novo!");
+                    Logg.warning("Opção inválida, tente de novo!");
                     break;
             }
         } while (opcao != 7);
