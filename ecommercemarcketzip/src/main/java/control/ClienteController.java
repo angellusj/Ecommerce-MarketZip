@@ -6,10 +6,10 @@ import model.dao.UsuarioDAO;
 import model.entity.Cliente;
 import utils.Logg;
 
-
 public class ClienteController {
 
-    public static boolean cadastrarCliente(int idUsuario, String nome, String cpf, String email, String telefone, String senha, String endereco) {
+    public static boolean cadastrarCliente(int idUsuario, String nome, String cpf, String email, String telefone,
+            String senha, String endereco) {
 
         if (nome == null) {
             throw new IllegalArgumentException("Nome do cliente não pode ser nulo.\n");
@@ -35,9 +35,10 @@ public class ClienteController {
             throw new IllegalArgumentException("Endereço do cliente não pode ser nulo ou vazio.\n");
         }
 
-        Cliente cliente = new Cliente(idUsuario, nome.toUpperCase(), cpf, email.toUpperCase(), telefone.toUpperCase(), senha.toUpperCase(),
+        Cliente cliente = new Cliente(idUsuario, nome.toUpperCase(), cpf, email.toUpperCase(), telefone.toUpperCase(),
+                senha.toUpperCase(),
                 endereco.toUpperCase());
-        
+
         return ClienteDAO.inserirCliente(cliente) > 0;
     }
 
@@ -56,12 +57,23 @@ public class ClienteController {
             return false;
         }
 
-        if(UsuarioDAO.buscarIdPorEmail(buscarPorCpf(cliente.getCpf()).getEmail()) != null){
-            Logg.warning("Já existe um email assim :(");
+        // Buscar cliente atual (dados antes da edição)
+        Cliente original = buscarPorCpf(cliente.getCpf());
+        if (original == null) {
+            Logg.warning("Cliente não encontrado pelo CPF.");
             return false;
         }
 
-        System.out.println("atualizado!");
+        Integer idEmailExistente = UsuarioDAO.buscarIdPorEmail(cliente.getEmail());
+
+        if (idEmailExistente != null) {
+            if (idEmailExistente != cliente.getIdUsuario()) {
+                Logg.warning("Já existe um usuário com esse email!");
+                return false;
+            }
+        }
+
+        System.out.println("Atualizado!");
         return ClienteDAO.atualizarCliente(cliente);
     }
 

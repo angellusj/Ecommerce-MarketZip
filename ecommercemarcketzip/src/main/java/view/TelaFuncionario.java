@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import control.ClienteController;
+import control.FuncionarioController;
 import model.entity.Cliente;
 import model.entity.Funcionario;
 import model.entity.Pedido;
@@ -18,7 +19,8 @@ public class TelaFuncionario {
             Logg.info("=== Menu do Funcionário ===");
             System.out.println("1. Gerenciar pedidos de clientes");
             System.out.println("2. Gerenciar Produtos");
-            System.out.println("3. Sair");
+            System.out.println("3. Gerenciar esta conta");
+            System.out.println("4. Sair");
             System.out.print("Escolha uma opção: ");
 
             try {
@@ -32,7 +34,7 @@ public class TelaFuncionario {
                         menuProduto(scanner);
                         break;
                     case 3:
-                        Logg.info("Saindo do menu do funcionário...");
+                        menuConta(scanner, func);
                         break;
                     default:
                         Logg.warning("Opção inválida, tente novamente.");
@@ -48,7 +50,53 @@ public class TelaFuncionario {
             } catch (Exception e) {
                 Logg.severe("Erro inesperado: " + e.getMessage());
             }
-        } while (opcao != 3);
+        } while (opcao != 4);
+    }
+
+    private static void menuConta(Scanner leitor, Funcionario funcionario) {
+        int opcao;
+        String nome, email, telefone, senha, cargo;
+        System.out.println("1. Atualizar informações desta conta");
+        System.out.println("2. Excluir esta conta");
+        System.out.println("3. voltar");
+        opcao = leitor.nextInt();
+        leitor.nextLine();
+
+        switch (opcao) {
+            case 1:
+                System.out.println("Nome novo: ");
+                nome = leitor.nextLine();
+
+                System.out.println("Email novo: ");
+                email = leitor.nextLine();
+
+                System.out.println("Senha nova: ");
+                senha = leitor.nextLine();
+
+                System.out.println("Telefone novo: ");
+                telefone = leitor.nextLine();
+
+                System.out.println("Cargo novo: ");
+                cargo = leitor.nextLine();
+
+                funcionario = new Funcionario(funcionario.getIdUsuario(), nome, funcionario.getCpf(), email, telefone,
+                        senha, cargo);
+
+                if (FuncionarioController.atualizarFuncionario(funcionario)) {
+                    Logg.info("Atualizado!");
+                }
+
+                break;
+                case 2:
+                if(FuncionarioController.deletarFuncionario(funcionario)){
+                    Logg.info("Deletado! Por favor, deslogue.");
+                    return;
+                }
+                break;
+            default:
+                break;
+        }
+
     }
 
     private static void menuPedido(Scanner scanner) {
@@ -195,7 +243,8 @@ public class TelaFuncionario {
                             Logg.warning("Cliente não encontrado.");
                             break;
                         }
-                        List<model.entity.Pedido> pedidos = control.PedidoController.listarPedidosAtivosDoCliente(clienteConsulta);
+                        List<model.entity.Pedido> pedidos = control.PedidoController
+                                .listarPedidosAtivosDoCliente(clienteConsulta);
                         if (pedidos.isEmpty()) {
                             Logg.warning("Nenhum pedido ativo encontrado para este cliente.");
                         } else {
@@ -206,24 +255,25 @@ public class TelaFuncionario {
                     case 2:
                         if (scanner.hasNextLine())
                             scanner.nextLine();
-                        
+
                         List<model.entity.Pedido> todosOsPedidos = control.PedidoController.listarPedidosFeitos();
                         if (todosOsPedidos.isEmpty()) {
                             Logg.warning("Nenhum pedido encontrado.");
                             break;
                         }
-                        
+
                         Logg.info("=== Lista de Todos os Pedidos ===");
                         System.out.printf("%-5s %-20s%n", "ID", "Status");
                         System.out.println("-".repeat(27));
-                        todosOsPedidos.forEach(p -> System.out.printf("%-5d %-20s%n", p.getIdPedido(), (p.getFinalizar() ? "Finalizado" : "Ativo")));
+                        todosOsPedidos.forEach(p -> System.out.printf("%-5d %-20s%n", p.getIdPedido(),
+                                (p.getFinalizar() ? "Finalizado" : "Ativo")));
                         System.out.println();
-                        
+
                         Logg.info("=== Buscar Pedido por ID ===");
                         System.out.print("ID do Pedido: ");
                         int idPedido = scanner.nextInt();
                         scanner.nextLine();
-                        
+
                         model.entity.Pedido pedido = control.PedidoController.buscarPedidoPorId(idPedido);
                         if (pedido != null) {
                             Logg.info("Pedido encontrado:");
@@ -354,13 +404,14 @@ public class TelaFuncionario {
                     Logg.warning("Nenhum produto cadastrado.");
                     return;
                 }
-                
+
                 Logg.info("=== Lista de Produtos ===");
                 System.out.printf("%-5s %-30s %-10s%n", "ID", "Nome", "Preço");
                 System.out.println("-".repeat(47));
-                produtos.forEach(p -> System.out.printf("%-5d %-30s R$ %.2f%n", p.getIdProduto(), p.getNome(), p.getPreco()));
+                produtos.forEach(
+                        p -> System.out.printf("%-5d %-30s R$ %.2f%n", p.getIdProduto(), p.getNome(), p.getPreco()));
                 System.out.println();
-                
+
                 System.out.print("ID do Produto: ");
                 int id = scanner.nextInt();
                 scanner.nextLine();

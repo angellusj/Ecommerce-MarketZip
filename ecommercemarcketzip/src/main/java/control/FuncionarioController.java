@@ -2,6 +2,7 @@ package control;
 
 import model.dao.FuncionarioDAO;
 import model.entity.Funcionario;
+import utils.Logg;
 import model.dao.UsuarioDAO;
 
 import java.util.List;
@@ -53,7 +54,22 @@ public class FuncionarioController {
             System.out.println("Objeto nulo");
             return false;
         }
-        System.out.println("Atualizado!");
+
+        Funcionario original = buscarPorCpf(funcionario.getCpf());
+        if (original == null) {
+            Logg.warning("Funcionário não encontrado pelo CPF.");
+            return false;
+        }
+
+        Integer idEmailExistente = UsuarioDAO.buscarIdPorEmail(funcionario.getEmail());
+
+        if (idEmailExistente != null) {
+            if (idEmailExistente != funcionario.getIdUsuario()) {
+                Logg.warning("Já existe um usuário com esse email!");
+                return false;
+            }
+        }
+
         return FuncionarioDAO.atualizarFuncionario(funcionario);
     }
 
