@@ -1,12 +1,13 @@
 package control;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import model.dao.ItemDePedidoDAO;
 import model.dao.PedidoDAO;
 import model.entity.Cliente;
 import model.entity.Pedido;
+import model.entity.Produto;
 
 public class PedidoController {
 
@@ -29,8 +30,8 @@ public class PedidoController {
         if (cliente == null) {
             throw new IllegalArgumentException("Cliente do pedido não pode ser nulo.\n");
         }
-        Date date = new Date(0);
-        Pedido pedido = new Pedido(cliente.getIdCliente(), date, false, 0.0, cliente);
+        Date date = new Date();
+        Pedido pedido = new Pedido(cliente.getIdUsuario(), date, false, 0.0, cliente);
         PedidoDAO.criarPedido(pedido);
         return pedido;
     }
@@ -97,7 +98,7 @@ public class PedidoController {
         return PedidoDAO.visualizarPedido(idPedido);
     }
 
-    public static boolean adicionarItemAoPedido(Pedido pedido, model.entity.Produto produto) {
+    public static boolean adicionarItemAoPedido(Pedido pedido, Produto produto) {
         try {
             PedidoDAO.adicionarItemAoPedido(pedido, produto);
             return true;
